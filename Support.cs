@@ -15,6 +15,8 @@ public class Support
   {
     var dirFiles = dirContent.Select(GetFileDetails).ToList();
 
+    // TODO: Implement recursive dir detection and details getting
+
     return new DirDetails
     {
       Files = dirFiles,
