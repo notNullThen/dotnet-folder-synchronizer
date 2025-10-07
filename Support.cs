@@ -2,7 +2,7 @@ namespace FoldersSynchronizer;
 
 public class Support
 {
-  public static List<FileDetails> GetFilesFromDir(string dirPath)
+  public static DirDetails GetFilesFromDir(string dirPath)
   {
     var dirContent = Directory.GetFiles(dirPath);
 
@@ -11,9 +11,14 @@ public class Support
     return dirDetails;
   }
 
-  private static List<FileDetails> GetDirDetails(string[] dirContent)
+  private static DirDetails GetDirDetails(string[] dirContent)
   {
-    return dirContent.Select(GetFileDetails).ToList();
+    var dirFiles = dirContent.Select(GetFileDetails).ToList();
+
+    return new DirDetails
+    {
+      Files = dirFiles,
+    };
   }
 
   private static FileDetails GetFileDetails(string filePath)
@@ -39,5 +44,11 @@ public class Support
     public string Name => Path.GetFileName(FilePath);
 
     public required string MD5 { get; set; }
+  }
+
+  public class DirDetails
+  {
+    public required List<FileDetails> Files { get; set; }
+    public List<DirDetails>? Dirs { get; set; }
   }
 }

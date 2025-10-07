@@ -8,10 +8,24 @@ class Program
 
     static void Main(string[] args)
     {
+        // debug
+        // args = ["-sourceDir", "./SourceFolder", "-targetDir", "./NewFolder"];
+
         var parameters = ArgumentsHelper.GetParameters(args);
 
-        var dirFiles = Support.GetFilesFromDir(parameters.SourceDirPath);
+        var sourceDirDetails = Support.GetFilesFromDir(parameters.SourceDirPath);
 
-        Console.WriteLine(JsonSerializer.Serialize(dirFiles, JsonPretty));
+        Support.DirDetails targetDirDetails;
+
+        if (Directory.Exists(parameters.TargetDirPath))
+            targetDirDetails = Support.GetFilesFromDir(parameters.TargetDirPath);
+        else
+            Directory.CreateDirectory(parameters.TargetDirPath);
+
+        Console.WriteLine(@$"Source Dir details:
+{JsonSerializer.Serialize(sourceDirDetails, JsonPretty)}
+
+Target Dir Details:
+");
     }
 }
