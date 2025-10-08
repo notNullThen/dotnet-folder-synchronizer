@@ -1,42 +1,20 @@
-﻿using System.Text.Json;
+﻿
+using System.Text.Json;
+using FoldersSynchronizer.Support;
 
 namespace FoldersSynchronizer;
 
 class Program
 {
-    private static readonly JsonSerializerOptions JsonPretty = new() { WriteIndented = true };
+    private static readonly FilesReceiver _fileReceiver = new();
 
     static void Main(string[] args)
     {
-        // debug
-        // args = ["-sourceDir", "./SourceFolder", "-targetDir", "./NewFolder"];
+        // For debugging in VS Code uncomment the line bellow:
+        args = ["-debug", "-sourceDir", "./SourceFolder", "-targetDir", "./TargetFolder"];
 
-        var parameters = ArgumentsHelper.GetConsoleParameters(args);
+        var parameters = ArgumentsProcessor.GetConsoleParameters(args);
 
-        var sourceDirDetails = Support.GetDirDetails(parameters.SourceDirPath);
-
-        Support.DirDetails targetDirDetails;
-
-        if (Directory.Exists(parameters.TargetDirPath))
-            targetDirDetails = Support.GetDirDetails(parameters.TargetDirPath);
-        else
-            Directory.CreateDirectory(parameters.TargetDirPath);
-
-        foreach (var arg in args)
-        {
-            if (arg.Contains("-debug"))
-            {
-                Console.WriteLine(@$"Source Dir details:
-{JsonSerializer.Serialize(sourceDirDetails, JsonPretty)}
-
-Target Dir Details:
-");
-            }
-        }
-    }
-
-    static void Debug()
-    {
-
+        _fileReceiver.RecieveFiles(parameters);
     }
 }

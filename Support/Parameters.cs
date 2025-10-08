@@ -1,10 +1,11 @@
-namespace FoldersSynchronizer;
+namespace FoldersSynchronizer.Support;
 
-public static class ArgumentsHelper
+public static class ArgumentsProcessor
 {
   private const string ArgsStrtuctureErrorMessage = "Arguments structure is wrong";
 
-  private static string[] _arguments = [ConsoleParameters.SourceDirAttribute, ConsoleParameters.TargetDirAttribute];
+  private static string[] _argumentsWithValues = [ConsoleParameters.SourceDirArgument, ConsoleParameters.TargetDirArgument];
+  private static string[] _argumentsWithoutValues = [ConsoleParameters.DebugArgument];
 
 
   public static ConsoleParameters GetConsoleParameters(string[] args)
@@ -17,15 +18,15 @@ public static class ArgumentsHelper
     {
       switch (arg.Key)
       {
-        case ConsoleParameters.SourceDirAttribute:
+        case ConsoleParameters.SourceDirArgument:
           parameters.SourceDirPath = arg.Value;
           continue;
 
-        case ConsoleParameters.TargetDirAttribute:
+        case ConsoleParameters.TargetDirArgument:
           parameters.TargetDirPath = arg.Value;
           continue;
 
-        case ConsoleParameters.DebugAttribute:
+        case ConsoleParameters.DebugArgument:
           parameters.DebugValue = true;
           continue;
 
@@ -35,12 +36,12 @@ public static class ArgumentsHelper
 
     if (string.IsNullOrWhiteSpace(parameters.SourceDirPath))
     {
-      throw new Exception($"You did not provided a '{ConsoleParameters.SourceDirAttribute}' argument");
+      throw new Exception($"You did not provided a '{ConsoleParameters.SourceDirArgument}' argument");
     }
 
     if (string.IsNullOrWhiteSpace(parameters.TargetDirPath))
     {
-      throw new Exception($"You did not provided a '{ConsoleParameters.TargetDirAttribute}' argument");
+      throw new Exception($"You did not provided a '{ConsoleParameters.TargetDirArgument}' argument");
     }
 
     return parameters;
@@ -50,11 +51,20 @@ public static class ArgumentsHelper
   {
     var parsedArgs = new Dictionary<string, string>();
 
-    for (var i = 0; i < args.Count(); i++)
+    for (var i = 0; i < args.Length; i++)
     {
       var arg = args[i];
 
-      if (args.Any(agr => _arguments.Any(argument => argument.Contains(arg))))
+      if (_argumentsWithoutValues.Any(argument => argument.Equals(arg)))
+      {
+        var key = arg;
+        parsedArgs.Add(key, string.Empty);
+        i++;
+        arg = args[i];
+      }
+
+
+      if (_argumentsWithValues.Any(argument => argument.Contains(arg)))
       {
         var key = arg;
         var value = args[i + 1];
@@ -64,23 +74,12 @@ public static class ArgumentsHelper
           throw new Exception($"{ArgsStrtuctureErrorMessage}: value of '{key}' argument starts with '-'");
         }
 
-        parsedArgs.Add(arg, args[i + 1]);
+        parsedArgs.Add(key, value);
 
         i++;
       }
     }
 
     return parsedArgs;
-  }
-
-
-  public class ConsoleParameters
-  {
-    public const string SourceDirAttribute = "-sourceDir";
-    public const string TargetDirAttribute = "-targetDir";
-    public const string DebugAttribute = "-debug";
-    public string SourceDirPath { get; set; }
-    public string TargetDirPath { get; set; }
-    public bool DebugValue { get; set; }
   }
 }
