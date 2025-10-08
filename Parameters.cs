@@ -9,40 +9,35 @@ public static class ArgumentsHelper
   {
     var parsedArgs = ParseArgs(args);
 
-    var sourceDirPath = string.Empty;
-    var targetDirPath = string.Empty;
+    var parameters = new Parameters();
 
     foreach (var arg in parsedArgs)
     {
       switch (arg.Key)
       {
         case Arguments.SourceDir:
-          sourceDirPath = arg.Value;
+          parameters.SourceDirPath = arg.Value;
           continue;
 
         case Arguments.TargetDir:
-          targetDirPath = arg.Value;
+          parameters.TargetDirPath = arg.Value;
           continue;
 
         default: throw new Exception($"The entered '{arg.Key}' argument is wrong.");
       }
     }
 
-    if (string.IsNullOrWhiteSpace(sourceDirPath))
+    if (string.IsNullOrWhiteSpace(parameters.SourceDirPath))
     {
       throw new Exception($"You did not provided a '{Arguments.SourceDir}' argument");
     }
 
-    if (string.IsNullOrWhiteSpace(targetDirPath))
+    if (string.IsNullOrWhiteSpace(parameters.TargetDirPath))
     {
       throw new Exception($"You did not provided a '{Arguments.TargetDir}' argument");
     }
 
-    return new Parameters()
-    {
-      SourceDirPath = sourceDirPath,
-      TargetDirPath = targetDirPath
-    };
+    return parameters;
   }
 
   private static Dictionary<string, string> ParseArgs(string[] args)
@@ -79,8 +74,8 @@ public static class ArgumentsHelper
 
   public class Parameters
   {
-    public required string SourceDirPath { get; set; }
-    public required string TargetDirPath { get; set; }
+    public string SourceDirPath { get; set; }
+    public string TargetDirPath { get; set; }
   }
 
   private static class Arguments

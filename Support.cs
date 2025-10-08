@@ -42,15 +42,15 @@ public class Support
 
   public class FileDetails
   {
-    public required string FilePath { get; set; }
+    public string FilePath { get; set; }
     public string Name => Path.GetFileName(FilePath);
 
-    public required string MD5 { get; set; }
+    public string MD5 { get; set; }
   }
 
   public class DirDetails
   {
-    public required List<FileDetails> Files { get; set; }
-    public List<DirDetails>? Dirs { get; set; }
+    public List<FileDetails> Files { get; set; }
+    public List<DirDetails> Dirs { get; set; }
   }
 }
