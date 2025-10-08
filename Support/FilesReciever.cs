@@ -11,7 +11,7 @@ public class FilesReceiver
   private static readonly JsonSerializerOptions JsonPrettyOptions = new() { WriteIndented = true };
 
 
-  public void RecieveFiles(ConsoleParameters parameters)
+  public void RecieveFiles(ArgumentsParameters parameters)
   {
 
     _sourceDirDetails = GetDirDetails(parameters.SourceDirPath);

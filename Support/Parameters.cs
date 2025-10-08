@@ -4,30 +4,37 @@ public static class ArgumentsProcessor
 {
   private const string ArgsStrtuctureErrorMessage = "Arguments structure is wrong";
 
-  private static string[] _argumentsWithValues = [ConsoleParameters.SourceDirArgument, ConsoleParameters.TargetDirArgument];
-  private static string[] _argumentsWithoutValues = [ConsoleParameters.DebugArgument];
+  private static string[] _argumentsWithValues = [
+    ArgumentsParameters.SourceDirArgument,
+    ArgumentsParameters.TargetDirArgument,
+    ArgumentsParameters.LogsArgument];
+  private static string[] _argumentsWithoutValues = [ArgumentsParameters.DebugArgument];
 
 
-  public static ConsoleParameters GetConsoleParameters(string[] args)
+  public static ArgumentsParameters GetParametersFromArguments(string[] args)
   {
     var parsedArgs = ParseArgs(args);
 
-    var parameters = new ConsoleParameters();
+    var parameters = new ArgumentsParameters();
 
     foreach (var arg in parsedArgs)
     {
       switch (arg.Key)
       {
-        case ConsoleParameters.SourceDirArgument:
+        case ArgumentsParameters.SourceDirArgument:
           parameters.SourceDirPath = arg.Value;
           continue;
 
-        case ConsoleParameters.TargetDirArgument:
+        case ArgumentsParameters.TargetDirArgument:
           parameters.TargetDirPath = arg.Value;
           continue;
 
-        case ConsoleParameters.DebugArgument:
+        case ArgumentsParameters.DebugArgument:
           parameters.DebugValue = true;
+          continue;
+
+        case ArgumentsParameters.LogsArgument:
+          parameters.LogsValue = arg.Value;
           continue;
 
         default: throw new Exception($"The entered '{arg.Key}' argument is wrong.");
@@ -36,12 +43,17 @@ public static class ArgumentsProcessor
 
     if (string.IsNullOrWhiteSpace(parameters.SourceDirPath))
     {
-      throw new Exception($"You did not provided a '{ConsoleParameters.SourceDirArgument}' argument");
+      throw new Exception($"You did not provide the '{ArgumentsParameters.SourceDirArgument}' argument");
     }
 
     if (string.IsNullOrWhiteSpace(parameters.TargetDirPath))
     {
-      throw new Exception($"You did not provided a '{ConsoleParameters.TargetDirArgument}' argument");
+      throw new Exception($"You did not provide the '{ArgumentsParameters.TargetDirArgument}' argument");
+    }
+
+    if (string.IsNullOrWhiteSpace(parameters.LogsValue))
+    {
+      throw new Exception($"You did not provide the '{ArgumentsParameters.LogsArgument}' argument");
     }
 
     return parameters;
@@ -59,8 +71,6 @@ public static class ArgumentsProcessor
       {
         var key = arg;
         parsedArgs.Add(key, string.Empty);
-        i++;
-        arg = args[i];
       }
 
 

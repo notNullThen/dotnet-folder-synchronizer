@@ -1,6 +1,4 @@
-﻿
-using System.Text.Json;
-using FoldersSynchronizer.Support;
+﻿using FoldersSynchronizer.Support;
 
 namespace FoldersSynchronizer;
 
@@ -11,9 +9,9 @@ class Program
     static void Main(string[] args)
     {
         // For debugging in VS Code uncomment the line bellow:
-        // args = ["-debug", "-sourceDir", "./SourceFolder", "-targetDir", "./TargetFolder"];
+        // args = ["-sourceDir", "./SourceFolder", "-targetDir", "./TargetFolder", "-logs", "./logs.txt", "-debug"];
 
-        var parameters = ArgumentsProcessor.GetConsoleParameters(args);
+        var parameters = ArgumentsProcessor.GetParametersFromArguments(args);
 
         _fileReceiver.RecieveFiles(parameters);
     }
