@@ -13,12 +13,12 @@ class Program
 
         var parameters = ArgumentsHelper.GetParameters(args);
 
-        var sourceDirDetails = Support.GetFilesFromDir(parameters.SourceDirPath);
+        var sourceDirDetails = Support.GetDirDetails(parameters.SourceDirPath);
 
         Support.DirDetails targetDirDetails;
 
         if (Directory.Exists(parameters.TargetDirPath))
-            targetDirDetails = Support.GetFilesFromDir(parameters.TargetDirPath);
+            targetDirDetails = Support.GetDirDetails(parameters.TargetDirPath);
         else
             Directory.CreateDirectory(parameters.TargetDirPath);
 

@@ -2,55 +2,50 @@ namespace FoldersSynchronizer;
 
 public class Support
 {
-  public static DirDetails GetFilesFromDir(string dirPath)
+  public static DirDetails GetDirDetails(string dirPath)
   {
-    var dirContent = Directory.GetFiles(dirPath);
+    var dirFilesPaths = Directory.GetFiles(dirPath);
+    var subDirsPaths = Directory.GetDirectories(dirPath);
 
-    var dirDetails = GetDirDetails(dirContent);
+    var dirDetails = new DirDetails()
+    {
+      FilesDetails = dirFilesPaths.Select(GetFileDetails).ToList(),
+      Dirs = subDirsPaths.Select(GetDirDetails).ToList()
+    };
+
+    dirDetails.Dirs = subDirsPaths.Select(GetDirDetails).ToList();
 
     return dirDetails;
   }
 
-  private static DirDetails GetDirDetails(string[] dirContent)
-  {
-    var dirFiles = dirContent.Select(GetFileDetails).ToList();
-
-    // TODO: Implement recursive dir detection and details getting
-
-    return new DirDetails
-    {
-      Files = dirFiles,
-    };
-  }
-
   private static FileDetails GetFileDetails(string filePath)
   {
-    var fileContent = File.ReadAllBytes(filePath);
-
-    return new FileDetails()
+    return new()
     {
       FilePath = filePath,
-      MD5 = CalculateMD5(fileContent)
+      Name = Path.GetFileName(filePath),
+      MD5 = CalculateMD5FromFilePath(filePath)
     };
   }
 
-  private static string CalculateMD5(byte[] input)
+  private static string CalculateMD5FromFilePath(string filePath)
   {
-    byte[] hashBytes = System.Security.Cryptography.MD5.HashData(input);
+    var fileBytes = File.ReadAllBytes(filePath);
+    byte[] hashBytes = System.Security.Cryptography.MD5.HashData(fileBytes);
     return Convert.ToHexString(hashBytes);
   }
 
   public class FileDetails
   {
-    public string FilePath { get; set; }
-    public string Name => Path.GetFileName(FilePath);
-
-    public string MD5 { get; set; }
+    public required string FilePath { get; set; }
+    public required string Name { get; set; }
+    public required string MD5 { get; set; }
   }
 
   public class DirDetails
   {
-    public List<FileDetails> Files { get; set; }
+    public string DirPath => Path.GetDirectoryName(FilesDetails.First().FilePath)!;
+    public List<FileDetails> FilesDetails { get; set; }
     public List<DirDetails> Dirs { get; set; }
   }
 }
