@@ -4,23 +4,29 @@ public static class ArgumentsHelper
 {
   private const string ArgsStrtuctureErrorMessage = "Arguments structure is wrong";
 
+  private static string[] _arguments = [ConsoleParameters.SourceDirAttribute, ConsoleParameters.TargetDirAttribute];
 
-  public static Parameters GetParameters(string[] args)
+
+  public static ConsoleParameters GetConsoleParameters(string[] args)
   {
     var parsedArgs = ParseArgs(args);
 
-    var parameters = new Parameters();
+    var parameters = new ConsoleParameters();
 
     foreach (var arg in parsedArgs)
     {
       switch (arg.Key)
       {
-        case Arguments.SourceDir:
+        case ConsoleParameters.SourceDirAttribute:
           parameters.SourceDirPath = arg.Value;
           continue;
 
-        case Arguments.TargetDir:
+        case ConsoleParameters.TargetDirAttribute:
           parameters.TargetDirPath = arg.Value;
+          continue;
+
+        case ConsoleParameters.DebugAttribute:
+          parameters.DebugValue = true;
           continue;
 
         default: throw new Exception($"The entered '{arg.Key}' argument is wrong.");
@@ -29,12 +35,12 @@ public static class ArgumentsHelper
 
     if (string.IsNullOrWhiteSpace(parameters.SourceDirPath))
     {
-      throw new Exception($"You did not provided a '{Arguments.SourceDir}' argument");
+      throw new Exception($"You did not provided a '{ConsoleParameters.SourceDirAttribute}' argument");
     }
 
     if (string.IsNullOrWhiteSpace(parameters.TargetDirPath))
     {
-      throw new Exception($"You did not provided a '{Arguments.TargetDir}' argument");
+      throw new Exception($"You did not provided a '{ConsoleParameters.TargetDirAttribute}' argument");
     }
 
     return parameters;
@@ -48,7 +54,7 @@ public static class ArgumentsHelper
     {
       var arg = args[i];
 
-      if (arg.Contains('-'))
+      if (args.Any(agr => _arguments.Any(argument => argument.Contains(arg))))
       {
         var key = arg;
         var value = args[i + 1];
@@ -62,25 +68,19 @@ public static class ArgumentsHelper
 
         i++;
       }
-      else if (i == 0)
-      {
-        throw new Exception($"{ArgsStrtuctureErrorMessage}: firstly should go argument which starts with '-'");
-      }
     }
 
     return parsedArgs;
   }
 
 
-  public class Parameters
+  public class ConsoleParameters
   {
+    public const string SourceDirAttribute = "-sourceDir";
+    public const string TargetDirAttribute = "-targetDir";
+    public const string DebugAttribute = "-debug";
     public string SourceDirPath { get; set; }
     public string TargetDirPath { get; set; }
-  }
-
-  private static class Arguments
-  {
-    public const string SourceDir = "-sourceDir";
-    public const string TargetDir = "-targetDir";
+    public bool DebugValue { get; set; }
   }
 }

@@ -11,7 +11,7 @@ class Program
         // debug
         // args = ["-sourceDir", "./SourceFolder", "-targetDir", "./NewFolder"];
 
-        var parameters = ArgumentsHelper.GetParameters(args);
+        var parameters = ArgumentsHelper.GetConsoleParameters(args);
 
         var sourceDirDetails = Support.GetDirDetails(parameters.SourceDirPath);
 
@@ -22,10 +22,21 @@ class Program
         else
             Directory.CreateDirectory(parameters.TargetDirPath);
 
-        Console.WriteLine(@$"Source Dir details:
+        foreach (var arg in args)
+        {
+            if (arg.Contains("-debug"))
+            {
+                Console.WriteLine(@$"Source Dir details:
 {JsonSerializer.Serialize(sourceDirDetails, JsonPretty)}
 
 Target Dir Details:
 ");
+            }
+        }
+    }
+
+    static void Debug()
+    {
+
     }
 }
