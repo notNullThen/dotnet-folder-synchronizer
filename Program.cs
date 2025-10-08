@@ -11,7 +11,7 @@ class Program
     static void Main(string[] args)
     {
         // For debugging in VS Code uncomment the line bellow:
-        args = ["-debug", "-sourceDir", "./SourceFolder", "-targetDir", "./TargetFolder"];
+        // args = ["-debug", "-sourceDir", "./SourceFolder", "-targetDir", "./TargetFolder"];
 
         var parameters = ArgumentsProcessor.GetConsoleParameters(args);
 
