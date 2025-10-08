@@ -39,16 +39,19 @@ public class FilesReceiver(Logger logger)
     _filesToProcess = filesToProcess;
   }
 
-  public void RecieveFiles(ArgumentsParameters parameters)
+  public void RecieveFiles(ArgumentsParameters argumentParameters)
   {
-    _sourceDirDetails = GetDirDetails(parameters.SourceDirPath);
+    _sourceDirDetails = GetDirDetails(argumentParameters.SourceDirPath);
 
-    if (Directory.Exists(parameters.TargetDirPath))
-      _targetDirDetails = GetDirDetails(parameters.TargetDirPath);
+    // TODO: Finish error handling
+    // throw new Exception($"The Source Directory '{_sourceDirDetails.Path}' was not found. Please provide correct path in '{ArgumentsParameters.SourceDirArgument}' argument.");
+
+    if (Directory.Exists(argumentParameters.TargetDirPath))
+      _targetDirDetails = GetDirDetails(argumentParameters.TargetDirPath);
     else
-      Directory.CreateDirectory(parameters.TargetDirPath);
+      Directory.CreateDirectory(argumentParameters.TargetDirPath);
 
-    if (parameters.DebugValue) Debug();
+    if (argumentParameters.DebugValue) Debug();
   }
 
   public void Debug()
