@@ -34,7 +34,7 @@ public static class ArgumentsProcessor
           continue;
 
         case ArgumentsParameters.LogsArgument:
-          parameters.LogsValue = arg.Value;
+          parameters.LogsFilePath = arg.Value;
           continue;
 
         default: throw new Exception($"The entered '{arg.Key}' argument is wrong.");
@@ -51,7 +51,7 @@ public static class ArgumentsProcessor
       throw new Exception($"You did not provide the '{ArgumentsParameters.TargetDirArgument}' argument");
     }
 
-    if (string.IsNullOrWhiteSpace(parameters.LogsValue))
+    if (string.IsNullOrWhiteSpace(parameters.LogsFilePath))
     {
       throw new Exception($"You did not provide the '{ArgumentsParameters.LogsArgument}' argument");
     }

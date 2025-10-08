@@ -8,6 +8,6 @@ public class ArgumentsParameters
   public const string LogsArgument = "-logs";
   public string SourceDirPath { get; set; }
   public string TargetDirPath { get; set; }
+  public string LogsFilePath { get; set; }
   public bool DebugValue { get; set; }
-  public string LogsValue { get; set; }
 }

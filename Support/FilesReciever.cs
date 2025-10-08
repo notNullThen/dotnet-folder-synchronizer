@@ -3,17 +3,44 @@ using FoldersSynchronizer.Support.Details;
 
 namespace FoldersSynchronizer.Support;
 
-public class FilesReceiver
+public class FilesReceiver(Logger logger)
 {
   private DirDetails _sourceDirDetails;
   private DirDetails _targetDirDetails;
 
+  private List<FileDetails> _filesToIgnore;
+  private List<FileDetails> _filesToProcess;
+
   private static readonly JsonSerializerOptions JsonPrettyOptions = new() { WriteIndented = true };
 
+  public void ImplementTasks()
+  {
+    // TODO: Implement function
+  }
+
+  public void IdentifyTasks()
+  {
+    List<FileDetails> filesToIgnore = new();
+    List<FileDetails> filesToProcess = _targetDirDetails.Files.FindAll(targetFile =>
+    {
+      bool ignore = _sourceDirDetails.Files.Any(sourceFile => sourceFile.Name.Equals(targetFile.Name) && sourceFile.MD5.Equals(targetFile.MD5));
+      bool process = !ignore;
+
+      if (ignore)
+      {
+        filesToIgnore.Add(targetFile);
+        logger.Log(targetFile, ignore, true);
+      }
+
+      return process;
+    }).ToList();
+
+    _filesToIgnore = filesToIgnore;
+    _filesToProcess = filesToProcess;
+  }
 
   public void RecieveFiles(ArgumentsParameters parameters)
   {
-
     _sourceDirDetails = GetDirDetails(parameters.SourceDirPath);
 
     if (Directory.Exists(parameters.TargetDirPath))

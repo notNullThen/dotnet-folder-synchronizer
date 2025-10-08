@@ -4,15 +4,16 @@ namespace FoldersSynchronizer;
 
 class Program
 {
-    private static readonly FilesReceiver _fileReceiver = new();
-
     static void Main(string[] args)
     {
         // For debugging in VS Code uncomment the line bellow:
-        // args = ["-sourceDir", "./SourceFolder", "-targetDir", "./TargetFolder", "-logs", "./logs.txt", "-debug"];
+        // args = ["-sourceDir", "./SourceFolder", "-targetDir", "./TargetFolder", "-logs", "./logs.txt"];
 
         var parameters = ArgumentsProcessor.GetParametersFromArguments(args);
+        var logger = new Logger(parameters.LogsFilePath);
+        var filesReceiver = new FilesReceiver(logger);
 
-        _fileReceiver.RecieveFiles(parameters);
+        filesReceiver.RecieveFiles(parameters);
+        filesReceiver.IdentifyTasks();
     }
 }

@@ -4,17 +4,24 @@ using FoldersSynchronizer.Support.Details;
 
 public class Logger
 {
-  private static string LoggerFilePath = Path.Combine([".", "logs.txt"]);
-
-  public void LogFileProcessed(FileDetails fileDetails, bool changed)
+  private static string _logsFilePath;
+  public Logger(string logsFilePath)
   {
-    var message = string.Empty;
+    File.Delete(logsFilePath);
+    _logsFilePath = logsFilePath;
+  }
+  public void Log(FileDetails fileDetails, bool ignored, bool consoleLog)
+  {
+    string message;
 
-    if (changed)
-      message = $"\nThe target file \"{fileDetails.Name}\" was changed.\nPath: {fileDetails.Path}\n";
+    if (ignored)
+      message = $"The target file \"{fileDetails.Name}\" will NOT be changed as it is identical with the source.\nPath: {fileDetails.Path}\n\n";
     else
-      message = $"\nThe target file\"{fileDetails.Name}\" is identical with source, therefore was NOT changed.\nPath: {fileDetails.Path}\n";
+      message = $"The target file \"{fileDetails.Name}\" was changed.\nPath: {fileDetails.Path}\n\n";
 
-    File.AppendAllText(LoggerFilePath, message);
+    if (consoleLog)
+      Console.Write(message);
+
+    File.AppendAllText(_logsFilePath, message);
   }
 }
