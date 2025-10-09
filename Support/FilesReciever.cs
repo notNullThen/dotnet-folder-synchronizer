@@ -3,13 +3,13 @@ using FoldersSynchronizer.Support.Details;
 
 namespace FoldersSynchronizer.Support;
 
-public class FilesReceiver(Logger logger)
+public class FilesReceiver(Logger logger, ArgumentsParameters argumentParameters)
 {
   private DirDetails _sourceDirDetails;
   private DirDetails _targetDirDetails;
 
   private readonly List<FileDetails> _filesToIgnore = [];
-  private readonly List<FileDetails> _filesToProcess = [];
+  private readonly List<FileDetails> _filesToReplace = [];
   private readonly List<string> _dirsToDeletePaths = [];
 
   private static readonly JsonSerializerOptions JsonPrettyOptions = new() { WriteIndented = true };
@@ -17,6 +17,8 @@ public class FilesReceiver(Logger logger)
   public void ExecuteTasks()
   {
     // TODO: Implement function
+    if (argumentParameters.DebugValue)
+      Debug();
   }
 
   public void ScanDir()
@@ -31,7 +33,7 @@ public class FilesReceiver(Logger logger)
       {
         if (!sourceSubDir.Name.Equals(targetSubdir.Name))
         {
-          _dirsToDeletePaths.Add(targetDir.Path);
+          _dirsToDeletePaths.Add(targetSubdir.Path);
           continue;
         }
 
@@ -53,11 +55,11 @@ public class FilesReceiver(Logger logger)
     }
     else
     {
-      _filesToProcess.Add(targetFile);
+      _filesToReplace.Add(targetFile);
     }
   }
 
-  public void RecieveFiles(ArgumentsParameters argumentParameters)
+  public void RecieveFiles()
   {
     _sourceDirDetails = GetDirDetails(argumentParameters.SourceDirPath);
 
@@ -68,13 +70,20 @@ public class FilesReceiver(Logger logger)
       _targetDirDetails = GetDirDetails(argumentParameters.TargetDirPath);
     else
       Directory.CreateDirectory(argumentParameters.TargetDirPath);
-
-    if (argumentParameters.DebugValue) Debug();
   }
 
   public void Debug()
   {
-    Console.WriteLine(@$"Source Dir details:
+    Console.WriteLine(@$"Files to replace:
+{JsonSerializer.Serialize(_filesToReplace, JsonPrettyOptions)}
+
+Files to ignore:
+{JsonSerializer.Serialize(_filesToIgnore, JsonPrettyOptions)}
+
+Dirs to delete:
+{JsonSerializer.Serialize(_dirsToDeletePaths, JsonPrettyOptions)}
+
+Source Dir details:
 {JsonSerializer.Serialize(_sourceDirDetails, JsonPrettyOptions)}
 
 Target Dir Details:
