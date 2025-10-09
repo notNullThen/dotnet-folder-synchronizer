@@ -8,9 +8,9 @@ public class FilesReceiver(Logger logger)
   private DirDetails _sourceDirDetails;
   private DirDetails _targetDirDetails;
 
-  private List<FileDetails> _filesToIgnore = new();
-  private List<FileDetails> _filesToProcess = new();
-  private List<string> _dirsToDeletePaths = new();
+  private readonly List<FileDetails> _filesToIgnore = [];
+  private readonly List<FileDetails> _filesToProcess = [];
+  private readonly List<string> _dirsToDeletePaths = [];
 
   private static readonly JsonSerializerOptions JsonPrettyOptions = new() { WriteIndented = true };
 
