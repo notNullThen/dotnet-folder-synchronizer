@@ -8,35 +8,53 @@ public class FilesReceiver(Logger logger)
   private DirDetails _sourceDirDetails;
   private DirDetails _targetDirDetails;
 
-  private List<FileDetails> _filesToIgnore;
-  private List<FileDetails> _filesToProcess;
+  private List<FileDetails> _filesToIgnore = new();
+  private List<FileDetails> _filesToProcess = new();
+  private List<string> _dirsToDeletePaths = new();
 
   private static readonly JsonSerializerOptions JsonPrettyOptions = new() { WriteIndented = true };
 
-  public void ImplementTasks()
+  public void ExecuteTasks()
   {
     // TODO: Implement function
   }
 
-  public void IdentifyTasks()
+  public void ScanDir()
   {
-    List<FileDetails> filesToIgnore = new();
-    List<FileDetails> filesToProcess = _targetDirDetails.Files.FindAll(targetFile =>
-    {
-      bool ignore = _sourceDirDetails.Files.Any(sourceFile => sourceFile.Name.Equals(targetFile.Name) && sourceFile.MD5.Equals(targetFile.MD5));
-      bool process = !ignore;
+    CheckDir(_sourceDirDetails, _targetDirDetails);
+  }
 
-      if (ignore)
+  private void CheckDir(DirDetails sourceDir, DirDetails targetDir)
+  {
+    foreach (var sourceSubDir in sourceDir.Dirs)
+      foreach (var targetSubdir in targetDir.Dirs)
       {
-        filesToIgnore.Add(targetFile);
-        logger.Log(targetFile, ignore, true);
+        if (!sourceSubDir.Name.Equals(targetSubdir.Name))
+        {
+          _dirsToDeletePaths.Add(targetDir.Path);
+          continue;
+        }
+
+        CheckDir(sourceSubDir, targetSubdir);
       }
 
-      return process;
-    }).ToList();
+    foreach (var targetFile in targetDir.Files)
+      CheckFile(sourceDir.Files, targetFile);
+  }
 
-    _filesToIgnore = filesToIgnore;
-    _filesToProcess = filesToProcess;
+  private void CheckFile(List<FileDetails> sourceFiles, FileDetails targetFile)
+  {
+    bool ignore = sourceFiles.Any(sourceFile => sourceFile.Name.Equals(targetFile.Name) && sourceFile.MD5.Equals(targetFile.MD5));
+
+    if (ignore)
+    {
+      _filesToIgnore.Add(targetFile);
+      logger.Log(targetFile, ignore, true);
+    }
+    else
+    {
+      _filesToProcess.Add(targetFile);
+    }
   }
 
   public void RecieveFiles(ArgumentsParameters argumentParameters)
@@ -72,29 +90,12 @@ Target Dir Details:
     var dirDetails = new DirDetails()
     {
       Path = dirPath,
-      Files = dirFilesPaths.Select(GetFileDetails).ToList(),
+      Files = dirFilesPaths.Select(filePath => new FileDetails() { Path = filePath }).ToList(),
       Dirs = subDirsPaths.Select(GetDirDetails).ToList()
     };
 
     dirDetails.Dirs = subDirsPaths.Select(GetDirDetails).ToList();
 
     return dirDetails;
-  }
-
-  private static FileDetails GetFileDetails(string filePath)
-  {
-    return new()
-    {
-      Path = filePath,
-      Name = Path.GetFileName(filePath),
-      MD5 = CalculateMD5FromFilePath(filePath)
-    };
-  }
-
-  private static string CalculateMD5FromFilePath(string filePath)
-  {
-    var fileBytes = File.ReadAllBytes(filePath);
-    byte[] hashBytes = System.Security.Cryptography.MD5.HashData(fileBytes);
-    return Convert.ToHexString(hashBytes);
   }
 }
