@@ -19,25 +19,25 @@ public static class ArgumentsProcessor
 
     foreach (var arg in parsedArgs)
     {
-      switch (arg.Key)
+      if (arg.Key == ArgumentsParameters.SourceDirArgument)
       {
-        case ArgumentsParameters.SourceDirArgument:
-          parameters.SourceDirPath = arg.Value;
-          continue;
-
-        case ArgumentsParameters.TargetDirArgument:
-          parameters.TargetDirPath = arg.Value;
-          continue;
-
-        case ArgumentsParameters.DebugArgument:
-          parameters.DebugValue = true;
-          continue;
-
-        case ArgumentsParameters.LogsArgument:
-          parameters.LogsFilePath = arg.Value;
-          continue;
-
-        default: throw new Exception($"The entered '{arg.Key}' argument is wrong.");
+        parameters.SourceDirPath = arg.Value;
+      }
+      else if (arg.Key == ArgumentsParameters.TargetDirArgument)
+      {
+        parameters.TargetDirPath = arg.Value;
+      }
+      else if (arg.Key == ArgumentsParameters.DebugArgument)
+      {
+        parameters.DebugValue = true;
+      }
+      else if (arg.Key == ArgumentsParameters.LogsArgument)
+      {
+        parameters.LogsFilePath = arg.Value;
+      }
+      else
+      {
+        throw new Exception($"The entered '{arg.Key}' argument is wrong.");
       }
     }
 
@@ -79,9 +79,9 @@ public static class ArgumentsProcessor
         var key = arg;
         var value = args[i + 1];
 
-        if (value.StartsWith('-'))
+        if (value.StartsWith(ArgumentsParameters.Prefix))
         {
-          throw new Exception($"{ArgsStrtuctureErrorMessage}: value of '{key}' argument starts with '-'");
+          throw new Exception($"{ArgsStrtuctureErrorMessage}: value of '{key}' argument starts with '{ArgumentsParameters.Prefix}'");
         }
 
         parsedArgs.Add(key, value);

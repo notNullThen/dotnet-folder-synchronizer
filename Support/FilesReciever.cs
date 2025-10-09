@@ -61,10 +61,10 @@ public class FilesReceiver(Logger logger, ArgumentsParameters argumentParameters
 
   public void RecieveFiles()
   {
-    _sourceDirDetails = GetDirDetails(argumentParameters.SourceDirPath);
+    if (!Directory.Exists(argumentParameters.SourceDirPath)) throw new DirectoryNotFoundException(
+      $"The Source Directory '{_sourceDirDetails.Path}' was not found.\nPlease provide correct path in '{ArgumentsParameters.SourceDirArgument}' argument.");
 
-    // TODO: Finish error handling
-    // throw new Exception($"The Source Directory '{_sourceDirDetails.Path}' was not found. Please provide correct path in '{ArgumentsParameters.SourceDirArgument}' argument.");
+    _sourceDirDetails = GetDirDetails(argumentParameters.SourceDirPath);
 
     if (Directory.Exists(argumentParameters.TargetDirPath))
       _targetDirDetails = GetDirDetails(argumentParameters.TargetDirPath);
