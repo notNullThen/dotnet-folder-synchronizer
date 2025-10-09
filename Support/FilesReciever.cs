@@ -8,55 +8,57 @@ public class FilesReceiver(Logger logger, ArgumentsParameters argumentParameters
   private DirDetails _sourceDirDetails;
   private DirDetails _targetDirDetails;
 
-  private readonly List<FileDetails> _filesToIgnore = [];
-  private readonly List<FileDetails> _filesToReplace = [];
+  private readonly List<string> _filesToCopyPaths = [];
+  private readonly List<string> _filesToIgnorePaths = [];
+  private readonly List<string> _filesToDeletePaths = [];
   private readonly List<string> _dirsToDeletePaths = [];
 
   private static readonly JsonSerializerOptions JsonPrettyOptions = new() { WriteIndented = true };
 
   public void ExecuteTasks()
   {
-    // TODO: Implement function
-    if (argumentParameters.DebugValue)
-      Debug();
+    if (argumentParameters.DebugValue) Debug();
+  }
+
+  public void CopyFolder()
+  {
+    // TODO: Implement
+  }
+
+  // private void GetTargetPaths()
+  // {
+  //   foreach (var fileToCopy in _filesToCopyPaths)
+  // }
+
+  public void DeleteDirs()
+  {
+    foreach (var dirToDelete in _dirsToDeletePaths)
+    {
+      try { Directory.Delete(dirToDelete); }
+      catch
+      {
+        logger.LogError($"Could not delete '{dirToDelete}' dir. Details are below:\n");
+        throw;
+      }
+    }
+  }
+
+  public void DeleteFiles()
+  {
+    foreach (var fileToDelete in _filesToDeletePaths)
+    {
+      try { File.Delete(fileToDelete); }
+      catch
+      {
+        logger.LogError($"Could not delete '{fileToDelete}' file. Details are below:\n");
+        throw;
+      }
+    }
   }
 
   public void ScanDir()
   {
     CheckDir(_sourceDirDetails, _targetDirDetails);
-  }
-
-  private void CheckDir(DirDetails sourceDir, DirDetails targetDir)
-  {
-    foreach (var sourceSubDir in sourceDir.Dirs)
-      foreach (var targetSubdir in targetDir.Dirs)
-      {
-        if (!sourceSubDir.Name.Equals(targetSubdir.Name))
-        {
-          _dirsToDeletePaths.Add(targetSubdir.Path);
-          continue;
-        }
-
-        CheckDir(sourceSubDir, targetSubdir);
-      }
-
-    foreach (var targetFile in targetDir.Files)
-      CheckFile(sourceDir.Files, targetFile);
-  }
-
-  private void CheckFile(List<FileDetails> sourceFiles, FileDetails targetFile)
-  {
-    bool ignore = sourceFiles.Any(sourceFile => sourceFile.Name.Equals(targetFile.Name) && sourceFile.MD5.Equals(targetFile.MD5));
-
-    if (ignore)
-    {
-      _filesToIgnore.Add(targetFile);
-      logger.Log(targetFile, ignore, true);
-    }
-    else
-    {
-      _filesToReplace.Add(targetFile);
-    }
   }
 
   public void RecieveFiles()
@@ -75,10 +77,10 @@ public class FilesReceiver(Logger logger, ArgumentsParameters argumentParameters
   public void Debug()
   {
     Console.WriteLine(@$"Files to replace:
-{JsonSerializer.Serialize(_filesToReplace, JsonPrettyOptions)}
+{JsonSerializer.Serialize(_filesToDeletePaths, JsonPrettyOptions)}
 
 Files to ignore:
-{JsonSerializer.Serialize(_filesToIgnore, JsonPrettyOptions)}
+{JsonSerializer.Serialize(_filesToIgnorePaths, JsonPrettyOptions)}
 
 Dirs to delete:
 {JsonSerializer.Serialize(_dirsToDeletePaths, JsonPrettyOptions)}
@@ -106,5 +108,54 @@ Target Dir Details:
     dirDetails.Dirs = subDirsPaths.Select(GetDirDetails).ToList();
 
     return dirDetails;
+  }
+
+  private void CheckDir(DirDetails sourceDir, DirDetails targetDir)
+  {
+    foreach (var sourceSubDir in sourceDir.Dirs)
+      foreach (var targetSubdir in targetDir.Dirs)
+      {
+        if (!sourceSubDir.Name.Equals(targetSubdir.Name))
+        {
+          _dirsToDeletePaths.Add(targetSubdir.Path);
+          continue;
+        }
+
+        CheckDir(sourceSubDir, targetSubdir);
+      }
+
+    foreach (var targetFile in targetDir.Files)
+      CheckFile(sourceDir.Files, targetFile);
+  }
+
+  private void CheckFile(List<FileDetails> sourceFiles, FileDetails targetFile)
+  {
+    var sourceFileToIgnore = sourceFiles.FirstOrDefault(sourceFile => AreFilesEqual(sourceFile, targetFile));
+
+    if (sourceFileToIgnore != null)
+    {
+      _filesToIgnorePaths.Add(targetFile.Path);
+      LogIgnoredFileDetails(targetFile);
+    }
+    else
+    {
+      // _filesToCopyPaths.Add(sourceFileToIgnore!.Path);
+      _filesToDeletePaths.Add(targetFile.Path);
+    }
+  }
+
+  private static bool AreFilesEqual(FileDetails sourceFile, FileDetails targetFile)
+  {
+    return sourceFile.Name.Equals(targetFile.Name) && sourceFile.MD5.Equals(targetFile.MD5);
+  }
+
+  private void LogIgnoredFileDetails(FileDetails fileDetails)
+  {
+    logger.LogInfo($"The target file \"{fileDetails.Name}\" will NOT be changed as it is identical with the source.\nPath: {fileDetails.Path}\n\n");
+  }
+
+  private void LogProcessedFileDetails(FileDetails fileDetails, bool ignored)
+  {
+    logger.LogSuccess($"The target file \"{fileDetails.Name}\" was changed.\nPath: {fileDetails.Path}\n\n");
   }
 }
