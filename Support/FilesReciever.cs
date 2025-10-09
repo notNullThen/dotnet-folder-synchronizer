@@ -130,16 +130,31 @@ Target Dir Details:
 
   private void CheckFile(List<FileDetails> sourceFiles, FileDetails targetFile)
   {
-    var sourceFileToIgnore = sourceFiles.FirstOrDefault(sourceFile => AreFilesEqual(sourceFile, targetFile));
+    FileDetails? sourceFileToCopy = null;
 
-    if (sourceFileToIgnore != null)
+    bool ignore = sourceFiles.Any(sourceFile =>
     {
+      if (AreFilesEqual(sourceFile, targetFile))
+      {
+        return true;
+      }
+
+      sourceFileToCopy = sourceFile;
+      return false;
+    });
+
+    if (ignore)
+    {
+      if (sourceFileToCopy != null)
+      {
+        _filesToCopyPaths.Add(sourceFileToCopy!.Path);
+      }
+
       _filesToIgnorePaths.Add(targetFile.Path);
       LogIgnoredFileDetails(targetFile);
     }
     else
     {
-      // _filesToCopyPaths.Add(sourceFileToIgnore!.Path);
       _filesToDeletePaths.Add(targetFile.Path);
     }
   }
