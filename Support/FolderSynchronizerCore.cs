@@ -50,11 +50,11 @@ public class FolderSynchronizerCore(Logger logger, ArgumentsParameters argumentP
   {
     foreach (var dirToDelete in _dirsToDeleteRelativePaths)
     {
-      var fullPath = Path.Combine(argumentParameters.TargetDirPath, dirToDelete);
+      var fullPath = argumentParameters.TargetDirPath + dirToDelete;
 
       if (!Directory.Exists(fullPath)) logger.LogInfo($"The '{fullPath}' directory we want to delete already does not exists.");
 
-      try { Directory.Delete(fullPath); }
+      try { Directory.Delete(fullPath, true); }
       catch
       {
         logger.LogError($"Could not delete the '{fullPath}' dir. Details are below:\n");
@@ -67,14 +67,14 @@ public class FolderSynchronizerCore(Logger logger, ArgumentsParameters argumentP
   {
     foreach (var fileToDelete in _filesToDeleteRelativePaths)
     {
-      var fullPath = Path.Combine(argumentParameters.TargetDirPath, fileToDelete);
+      var fullPath = argumentParameters.TargetDirPath + fileToDelete;
 
       if (!File.Exists(fullPath)) logger.LogInfo($"The '{fullPath}' file we want to delete already does not exists.");
 
-      try { File.Delete(fileToDelete); }
+      try { File.Delete(fullPath); }
       catch
       {
-        logger.LogError($"Could not delete the '{fileToDelete}' file. Details are below:\n");
+        logger.LogError($"Could not delete the '{fullPath}' file. Details are below:\n");
         throw;
       }
     }
@@ -128,50 +128,74 @@ Target Dir Details:
 
   private void CheckDir(DirDetails sourceDir, DirDetails targetDir)
   {
+    CheckIgnoreFiles(sourceDir.Files, targetDir.Files);
+    CheckDeleteFiles(sourceDir.Files, targetDir.Files);
+    CheckCopyFiles(sourceDir.Files, targetDir.Files);
+
     foreach (var sourceSubDir in sourceDir.Dirs)
-      foreach (var targetSubdir in targetDir.Dirs)
+      foreach (var targetSubDir in targetDir.Dirs)
       {
-        if (!AreDirsEqual(sourceSubDir, targetSubdir))
+        if (!AreDirsEqual(sourceSubDir, targetSubDir))
         {
-          _dirsToDeleteRelativePaths.Add(GetRelativePath(targetSubdir.Path));
+          _dirsToDeleteRelativePaths.Add(GetRelativePath(targetSubDir.Path));
           continue;
         }
 
-        CheckDir(sourceSubDir, targetSubdir);
+        CheckDir(sourceSubDir, targetSubDir);
       }
-
-    foreach (var targetFile in targetDir.Files)
-      CheckFile(sourceDir.Files, targetFile);
   }
 
-  private void CheckFile(List<FileDetails> sourceFiles, FileDetails targetFile)
+  private void CheckCopyFiles(List<FileDetails> sourceFiles, List<FileDetails> targetFiles)
   {
-    FileDetails? sourceFileToCopy = null;
+    if (_filesToIgnoreRelativePaths.Count == 0) throw new Exception($"Use the {nameof(CheckDeleteFiles)}() only after {nameof(CheckIgnoreFiles)}() is done. This function uses {nameof(_filesToIgnoreRelativePaths)}");
 
-    bool ignore = sourceFiles.Any(sourceFile =>
+    foreach (var sourceFile in sourceFiles)
     {
-      if (AreFilesEqual(sourceFile, targetFile))
+      foreach (var targetFile in targetFiles)
       {
-        return true;
+        bool isIgnored = _filesToIgnoreRelativePaths.Any(ignoreRelativePath => ignoreRelativePath == GetRelativePath(sourceFile.Path));
+
+        if (!AreFilesEqual(sourceFile, targetFile) && !isIgnored)
+        {
+          _filesToCopyRelativePaths.Add(GetRelativePath(sourceFile.Path));
+          break;
+        }
       }
-
-      sourceFileToCopy = sourceFile;
-      return false;
-    });
-
-    if (ignore)
-    {
-      if (sourceFileToCopy != null)
-      {
-        _filesToCopyRelativePaths.Add(GetRelativePath(sourceFileToCopy.Path));
-      }
-
-      _filesToIgnoreRelativePaths.Add(GetRelativePath(targetFile.Path));
-      logger.LogInfo($"The target file \"{targetFile.Name}\" will NOT be changed as it is identical with the source.\nPath: {targetFile.Path}\n\n");
     }
-    else
+  }
+
+
+  private void CheckDeleteFiles(List<FileDetails> sourceFiles, List<FileDetails> targetFiles)
+  {
+    if (_filesToIgnoreRelativePaths.Count == 0) throw new Exception($"Use the {nameof(CheckDeleteFiles)}() only after {nameof(CheckIgnoreFiles)}() is done. This function uses {nameof(_filesToIgnoreRelativePaths)} and it's empty now.");
+
+    foreach (var targetFile in targetFiles)
     {
-      _filesToDeleteRelativePaths.Add(GetRelativePath(targetFile.Path));
+      foreach (var sourceFile in sourceFiles)
+      {
+        bool isIgnored = _filesToIgnoreRelativePaths.Any(ignoreRelativePath => ignoreRelativePath == GetRelativePath(targetFile.Path));
+
+        if (!AreFilesEqual(sourceFile, targetFile) && !isIgnored)
+        {
+          _filesToDeleteRelativePaths.Add(GetRelativePath(targetFile.Path));
+          break;
+        }
+      }
+    }
+  }
+
+  private void CheckIgnoreFiles(List<FileDetails> sourceFiles, List<FileDetails> targetFiles)
+  {
+    foreach (var targetFile in targetFiles)
+    {
+      foreach (var sourceFile in sourceFiles)
+      {
+        if (AreFilesEqual(sourceFile, targetFile))
+        {
+          _filesToIgnoreRelativePaths.Add(GetRelativePath(sourceFile.Path));
+          break;
+        }
+      }
     }
   }
 
