@@ -21,46 +21,6 @@ public class FilesReceiver(Logger logger, ArgumentsParameters argumentParameters
     if (argumentParameters.DebugValue) Debug();
   }
 
-  public List<string> GetCopyToTargetPaths()
-  {
-    return _filesToCopyPaths.Select(sourcePath =>
-    {
-      var sourceSubPath = sourcePath.Split(argumentParameters.SourceDirPath)[1];
-      return argumentParameters.TargetDirPath + sourceSubPath;
-    }).ToList();
-  }
-
-  public void DeleteDirs()
-  {
-    foreach (var dirToDelete in _dirsToDeletePaths)
-    {
-      try { Directory.Delete(dirToDelete); }
-      catch
-      {
-        logger.LogError($"Could not delete the '{dirToDelete}' dir. Details are below:\n");
-        throw;
-      }
-    }
-  }
-
-  public void DeleteFiles()
-  {
-    foreach (var fileToDelete in _filesToDeletePaths)
-    {
-      try { File.Delete(fileToDelete); }
-      catch
-      {
-        logger.LogError($"Could not delete the '{fileToDelete}' file. Details are below:\n");
-        throw;
-      }
-    }
-  }
-
-  public void ScanDir()
-  {
-    CheckDir(_sourceDirDetails, _targetDirDetails);
-  }
-
   public void RecieveFiles()
   {
     if (!Directory.Exists(argumentParameters.SourceDirPath)) throw new DirectoryNotFoundException(
@@ -74,7 +34,47 @@ public class FilesReceiver(Logger logger, ArgumentsParameters argumentParameters
       Directory.CreateDirectory(argumentParameters.TargetDirPath);
   }
 
-  public void Debug()
+  public void ScanDir()
+  {
+    CheckDir(_sourceDirDetails, _targetDirDetails);
+  }
+
+  private List<string> GetCopyToTargetPaths()
+  {
+    return _filesToCopyPaths.Select(sourcePath =>
+    {
+      var sourceSubPath = sourcePath.Split(argumentParameters.SourceDirPath)[1];
+      return argumentParameters.TargetDirPath + sourceSubPath;
+    }).ToList();
+  }
+
+  private void DeleteDirs()
+  {
+    foreach (var dirToDelete in _dirsToDeletePaths)
+    {
+      try { Directory.Delete(dirToDelete); }
+      catch
+      {
+        logger.LogError($"Could not delete the '{dirToDelete}' dir. Details are below:\n");
+        throw;
+      }
+    }
+  }
+
+  private void DeleteFiles()
+  {
+    foreach (var fileToDelete in _filesToDeletePaths)
+    {
+      try { File.Delete(fileToDelete); }
+      catch
+      {
+        logger.LogError($"Could not delete the '{fileToDelete}' file. Details are below:\n");
+        throw;
+      }
+    }
+  }
+
+  private void Debug()
   {
     Console.WriteLine(@$"Files to replace:
 {JsonSerializer.Serialize(_filesToDeletePaths, JsonPrettyOptions)}
@@ -93,7 +93,7 @@ Target Dir Details:
 ");
   }
 
-  public static DirDetails GetDirDetails(string dirPath)
+  private static DirDetails GetDirDetails(string dirPath)
   {
     var dirFilesPaths = Directory.GetFiles(dirPath);
     var subDirsPaths = Directory.GetDirectories(dirPath);
