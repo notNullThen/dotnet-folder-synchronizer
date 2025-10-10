@@ -17,12 +17,17 @@ public class FilesReceiver(Logger logger, ArgumentsParameters argumentParameters
 
   public void ExecuteTasks()
   {
+    var TOCOPY = GetCopyToTargetPaths();
     if (argumentParameters.DebugValue) Debug();
   }
 
-  public void CopyFolder()
+  public List<string> GetCopyToTargetPaths()
   {
-    // TODO: Implement
+    return _filesToCopyPaths.Select(sourcePath =>
+    {
+      var sourceSubPath = sourcePath.Split(argumentParameters.SourceDirPath)[1];
+      return argumentParameters.TargetDirPath + sourceSubPath;
+    }).ToList();
   }
 
   public void DeleteDirs()
@@ -32,7 +37,7 @@ public class FilesReceiver(Logger logger, ArgumentsParameters argumentParameters
       try { Directory.Delete(dirToDelete); }
       catch
       {
-        logger.LogError($"Could not delete '{dirToDelete}' dir. Details are below:\n");
+        logger.LogError($"Could not delete the '{dirToDelete}' dir. Details are below:\n");
         throw;
       }
     }
@@ -45,7 +50,7 @@ public class FilesReceiver(Logger logger, ArgumentsParameters argumentParameters
       try { File.Delete(fileToDelete); }
       catch
       {
-        logger.LogError($"Could not delete '{fileToDelete}' file. Details are below:\n");
+        logger.LogError($"Could not delete the '{fileToDelete}' file. Details are below:\n");
         throw;
       }
     }
