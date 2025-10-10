@@ -30,7 +30,7 @@ public class Logger
     File.AppendAllText(_logsFilePath, message);
   }
 
-  public void LogError(string message)
+  public void LogError(string message, bool throwException = false)
   {
     var header = "💥💥💥 Error 💥💥💥\n";
     message = header + message;
@@ -38,5 +38,7 @@ public class Logger
     if (_consoleLog)
       Console.Write(message);
     File.AppendAllText(_logsFilePath, message);
+
+    if (throwException) throw new Exception(message);
   }
 }

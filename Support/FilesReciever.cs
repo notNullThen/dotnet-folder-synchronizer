@@ -3,23 +3,17 @@ using FoldersSynchronizer.Support.Details;
 
 namespace FoldersSynchronizer.Support;
 
-public class FilesReceiver(Logger logger, ArgumentsParameters argumentParameters)
+public class FolderSynchronizerCore(Logger logger, ArgumentsParameters argumentParameters)
 {
   private DirDetails _sourceDirDetails;
   private DirDetails _targetDirDetails;
 
-  private readonly List<string> _filesToCopyPaths = [];
-  private readonly List<string> _filesToIgnorePaths = [];
-  private readonly List<string> _filesToDeletePaths = [];
-  private readonly List<string> _dirsToDeletePaths = [];
+  private readonly List<string> _filesToCopyRelativePaths = [];
+  private readonly List<string> _filesToIgnoreRelativePaths = [];
+  private readonly List<string> _filesToDeleteRelativePaths = [];
+  private readonly List<string> _dirsToDeleteRelativePaths = [];
 
   private static readonly JsonSerializerOptions JsonPrettyOptions = new() { WriteIndented = true };
-
-  public void ExecuteTasks()
-  {
-    var TOCOPY = GetCopyToTargetPaths();
-    if (argumentParameters.DebugValue) Debug();
-  }
 
   public void RecieveFiles()
   {
@@ -39,32 +33,44 @@ public class FilesReceiver(Logger logger, ArgumentsParameters argumentParameters
     CheckDir(_sourceDirDetails, _targetDirDetails);
   }
 
-  private List<string> GetCopyToTargetPaths()
+  public void CopyFiles()
   {
-    return _filesToCopyPaths.Select(sourcePath =>
+    foreach (var relativePath in _filesToCopyRelativePaths)
     {
-      var sourceSubPath = sourcePath.Split(argumentParameters.SourceDirPath)[1];
-      return argumentParameters.TargetDirPath + sourceSubPath;
-    }).ToList();
+      var sourceFullPath = argumentParameters.SourceDirPath + relativePath;
+      var targetFullPath = argumentParameters.TargetDirPath + relativePath;
+
+      if (File.Exists(targetFullPath)) logger.LogError($"The '{targetFullPath}' file we want to copy already exists.", true);
+
+      File.Copy(sourceFullPath, targetFullPath);
+    }
   }
 
-  private void DeleteDirs()
+  public void DeleteTargetDirs()
   {
-    foreach (var dirToDelete in _dirsToDeletePaths)
+    foreach (var dirToDelete in _dirsToDeleteRelativePaths)
     {
-      try { Directory.Delete(dirToDelete); }
+      var fullPath = Path.Combine(argumentParameters.TargetDirPath, dirToDelete);
+
+      if (!Directory.Exists(fullPath)) logger.LogInfo($"The '{fullPath}' directory we want to delete already does not exists.");
+
+      try { Directory.Delete(fullPath); }
       catch
       {
-        logger.LogError($"Could not delete the '{dirToDelete}' dir. Details are below:\n");
+        logger.LogError($"Could not delete the '{fullPath}' dir. Details are below:\n");
         throw;
       }
     }
   }
 
-  private void DeleteFiles()
+  public void DeleteTargetFiles()
   {
-    foreach (var fileToDelete in _filesToDeletePaths)
+    foreach (var fileToDelete in _filesToDeleteRelativePaths)
     {
+      var fullPath = Path.Combine(argumentParameters.TargetDirPath, fileToDelete);
+
+      if (!File.Exists(fullPath)) logger.LogInfo($"The '{fullPath}' file we want to delete already does not exists.");
+
       try { File.Delete(fileToDelete); }
       catch
       {
@@ -74,16 +80,16 @@ public class FilesReceiver(Logger logger, ArgumentsParameters argumentParameters
     }
   }
 
-  private void Debug()
+  public void Debug()
   {
     Console.WriteLine(@$"Files to replace:
-{JsonSerializer.Serialize(_filesToDeletePaths, JsonPrettyOptions)}
+{JsonSerializer.Serialize(_filesToDeleteRelativePaths, JsonPrettyOptions)}
 
 Files to ignore:
-{JsonSerializer.Serialize(_filesToIgnorePaths, JsonPrettyOptions)}
+{JsonSerializer.Serialize(_filesToIgnoreRelativePaths, JsonPrettyOptions)}
 
 Dirs to delete:
-{JsonSerializer.Serialize(_dirsToDeletePaths, JsonPrettyOptions)}
+{JsonSerializer.Serialize(_dirsToDeleteRelativePaths, JsonPrettyOptions)}
 
 Source Dir details:
 {JsonSerializer.Serialize(_sourceDirDetails, JsonPrettyOptions)}
@@ -91,6 +97,16 @@ Source Dir details:
 Target Dir Details:
 {JsonSerializer.Serialize(_targetDirDetails, JsonPrettyOptions)}
 ");
+  }
+
+  private string GetRelativePath(string fullPath)
+  {
+    if (fullPath.StartsWith(argumentParameters.SourceDirPath))
+      fullPath = fullPath.Split(argumentParameters.SourceDirPath)[1];
+    if (fullPath.StartsWith(argumentParameters.TargetDirPath))
+      fullPath = fullPath.Split(argumentParameters.TargetDirPath)[1];
+
+    return fullPath;
   }
 
   private static DirDetails GetDirDetails(string dirPath)
@@ -117,7 +133,7 @@ Target Dir Details:
       {
         if (!AreDirsEqual(sourceSubDir, targetSubdir))
         {
-          _dirsToDeletePaths.Add(targetSubdir.Path);
+          _dirsToDeleteRelativePaths.Add(GetRelativePath(targetSubdir.Path));
           continue;
         }
 
@@ -147,15 +163,15 @@ Target Dir Details:
     {
       if (sourceFileToCopy != null)
       {
-        _filesToCopyPaths.Add(sourceFileToCopy!.Path);
+        _filesToCopyRelativePaths.Add(GetRelativePath(sourceFileToCopy.Path));
       }
 
-      _filesToIgnorePaths.Add(targetFile.Path);
-      LogIgnoredFileDetails(targetFile);
+      _filesToIgnoreRelativePaths.Add(GetRelativePath(targetFile.Path));
+      logger.LogInfo($"The target file \"{targetFile.Name}\" will NOT be changed as it is identical with the source.\nPath: {targetFile.Path}\n\n");
     }
     else
     {
-      _filesToDeletePaths.Add(targetFile.Path);
+      _filesToDeleteRelativePaths.Add(GetRelativePath(targetFile.Path));
     }
   }
 
@@ -167,15 +183,5 @@ Target Dir Details:
   private static bool AreDirsEqual(DirDetails sourceDir, DirDetails targetDir)
   {
     return sourceDir.Name.Equals(targetDir.Name);
-  }
-
-  private void LogIgnoredFileDetails(FileDetails fileDetails)
-  {
-    logger.LogInfo($"The target file \"{fileDetails.Name}\" will NOT be changed as it is identical with the source.\nPath: {fileDetails.Path}\n\n");
-  }
-
-  private void LogProcessedFileDetails(FileDetails fileDetails, bool ignored)
-  {
-    logger.LogSuccess($"The target file \"{fileDetails.Name}\" was changed.\nPath: {fileDetails.Path}\n\n");
   }
 }
