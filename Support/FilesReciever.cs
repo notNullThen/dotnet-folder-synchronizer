@@ -115,7 +115,7 @@ Target Dir Details:
     foreach (var sourceSubDir in sourceDir.Dirs)
       foreach (var targetSubdir in targetDir.Dirs)
       {
-        if (!sourceSubDir.Name.Equals(targetSubdir.Name))
+        if (!AreDirsEqual(sourceSubDir, targetSubdir))
         {
           _dirsToDeletePaths.Add(targetSubdir.Path);
           continue;
@@ -162,6 +162,11 @@ Target Dir Details:
   private static bool AreFilesEqual(FileDetails sourceFile, FileDetails targetFile)
   {
     return sourceFile.Name.Equals(targetFile.Name) && sourceFile.MD5.Equals(targetFile.MD5);
+  }
+
+  private static bool AreDirsEqual(DirDetails sourceDir, DirDetails targetDir)
+  {
+    return sourceDir.Name.Equals(targetDir.Name);
   }
 
   private void LogIgnoredFileDetails(FileDetails fileDetails)
