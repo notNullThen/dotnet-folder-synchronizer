@@ -25,11 +25,6 @@ public class FilesReceiver(Logger logger, ArgumentsParameters argumentParameters
     // TODO: Implement
   }
 
-  // private void GetTargetPaths()
-  // {
-  //   foreach (var fileToCopy in _filesToCopyPaths)
-  // }
-
   public void DeleteDirs()
   {
     foreach (var dirToDelete in _dirsToDeletePaths)
