@@ -1,9 +1,8 @@
-using System.Text.Json;
 using FoldersSynchronizer.Support.Details;
 
 namespace FoldersSynchronizer.Support;
 
-public abstract class FolderSynchronizerCore(ArgumentsParameters argumentsParameters)
+public abstract class FilesSynchronizerCore(ArgumentsParameters argumentsParameters)
 {
   protected ArgumentsParameters argumentsParameters = argumentsParameters;
 

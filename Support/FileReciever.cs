@@ -2,7 +2,7 @@ using FoldersSynchronizer.Support.Details;
 
 namespace FoldersSynchronizer.Support
 {
-  public class FileReceiver(ArgumentsParameters argumentsParameters) : FolderSynchronizerCore(argumentsParameters)
+  public class FileReceiver(ArgumentsParameters argumentsParameters) : FilesSynchronizerCore(argumentsParameters)
   {
     public void RecieveDirs()
     {
