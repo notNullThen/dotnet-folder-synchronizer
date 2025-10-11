@@ -21,17 +21,27 @@ namespace FoldersSynchronizer.Support
 
     public void PerformFilesScan()
     {
-      DetectFilesToDelete(sourceDirDetails.Files, targetDirDetails.Files);
-      DetectFilesToCopy(sourceDirDetails.Files, targetDirDetails.Files);
+      DetectFilesToDelete(sourceDirDetails, targetDirDetails);
+      DetectFilesToCopy(sourceDirDetails, targetDirDetails);
     }
 
-    private void DetectFilesToDelete(List<FileDetails> sourceFiles, List<FileDetails> targetFiles)
+    private void DetectFilesToDelete(DirDetails sourceDir, DirDetails targetDir)
     {
-      foreach (var targetFile in targetFiles)
+      foreach (var sourceSubDir in sourceDir.Dirs)
+      {
+        foreach (var targetSubDir in targetDir.Dirs)
+          if (AreDirsEqual(sourceSubDir, targetSubDir))
+          {
+            DetectFilesToDelete(sourceSubDir, targetSubDir);
+            break;
+          }
+      }
+
+      foreach (var targetFile in targetDir.Files)
       {
         bool matchFound = false;
 
-        foreach (var sourceFile in sourceFiles)
+        foreach (var sourceFile in sourceDir.Files)
         {
           if (AreFilesEqual(sourceFile, targetFile))
           {
@@ -45,13 +55,23 @@ namespace FoldersSynchronizer.Support
       }
     }
 
-    private void DetectFilesToCopy(List<FileDetails> sourceFiles, List<FileDetails> targetFiles)
+    private void DetectFilesToCopy(DirDetails sourceDir, DirDetails targetDir)
     {
-      foreach (var sourceFile in sourceFiles)
+      foreach (var targetSubDir in targetDir.Dirs)
+      {
+        foreach (var sourceSubDir in sourceDir.Dirs)
+          if (AreDirsEqual(sourceSubDir, targetSubDir))
+          {
+            DetectFilesToCopy(sourceSubDir, targetSubDir);
+            break;
+          }
+      }
+
+      foreach (var sourceFile in sourceDir.Files)
       {
         bool matchFound = false;
 
-        foreach (var targetFile in targetFiles)
+        foreach (var targetFile in targetDir.Files)
         {
           if (AreFilesEqual(sourceFile, targetFile))
           {

@@ -36,12 +36,5 @@ namespace FoldersSynchronizer.Support
         if (!matchFound) _dirsToDeleteRelativePaths.Add(targetSubDir.Path);
       }
     }
-
-    private bool AreDirsEqual(DirDetails sourceDir, DirDetails targetDir)
-    {
-      var sourceDirRelativePath = GetRelativePath(sourceDir.Path);
-      var targetDirRelativePath = GetRelativePath(targetDir.Path);
-      return sourceDirRelativePath.Equals(targetDirRelativePath);
-    }
   }
 }

@@ -31,4 +31,11 @@ public abstract class FilesSynchronizerCore(ArgumentsParameters argumentsParamet
 
     return fullPath;
   }
+
+  protected bool AreDirsEqual(DirDetails sourceDir, DirDetails targetDir)
+  {
+    var sourceDirRelativePath = GetRelativePath(sourceDir.Path);
+    var targetDirRelativePath = GetRelativePath(targetDir.Path);
+    return sourceDirRelativePath.Equals(targetDirRelativePath);
+  }
 }
