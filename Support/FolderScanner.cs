@@ -16,7 +16,7 @@ namespace FoldersSynchronizer.Support
 
     public void PerformFoldersScan()
     {
-      if (!Directory.Exists(argumentsParameters.TargetDirPath))
+      if (Directory.Exists(argumentsParameters.TargetDirPath))
         ScanFolder(sourceDirDetails.Dirs, targetDirDetails.Dirs);
     }
 
