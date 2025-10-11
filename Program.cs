@@ -15,7 +15,10 @@ class Program
         var fileReceiver = new FileReceiver(argumentParameters);
         var folderScanner = new FolderScaner(argumentParameters);
 
-        fileReceiver.RecieveFiles();
-        folderScanner.InitFoldersScan();
+        fileReceiver.RecieveDirs();
+
+        folderScanner.PerformFoldersScan();
+
+        folderScanner.PerformFoldersDeletion();
     }
 }

@@ -4,9 +4,17 @@ namespace FoldersSynchronizer.Support
 {
   public class FolderScaner(ArgumentsParameters argumentsParameters) : FolderSynchronizerCore(argumentsParameters)
   {
-    private List<string> _dirsToDeletePaths = new();
+    static List<string> DirsToDeletePaths = new();
 
-    public void InitFoldersScan()
+    public void PerformFoldersDeletion()
+    {
+      foreach (var deletePath in DirsToDeletePaths)
+      {
+        Directory.Delete(deletePath, recursive: true);
+      }
+    }
+
+    public void PerformFoldersScan()
     {
       ScanFolder(SourceDirDetails.Dirs, TargetDirDetails.Dirs);
     }
@@ -27,7 +35,7 @@ namespace FoldersSynchronizer.Support
           }
         }
 
-        if (!matchFound) _dirsToDeletePaths.Add(targetSubDir.Path);
+        if (!matchFound) DirsToDeletePaths.Add(targetSubDir.Path);
       }
     }
 
