@@ -9,6 +9,19 @@ public abstract class FilesSynchronizerCore(ArgumentsParameters argumentsParamet
   protected static DirDetails sourceDirDetails;
   protected static DirDetails targetDirDetails;
 
+  protected enum PathType
+  {
+    Source,
+    Target
+  }
+
+  protected string UseFullPath(string relativePath, PathType pathType)
+  {
+    if (pathType == PathType.Source)
+      return argumentsParameters.SourceDirPath + relativePath;
+    else
+      return argumentsParameters.TargetDirPath + relativePath;
+  }
   protected string GetRelativePath(string fullPath)
   {
     if (fullPath.StartsWith(argumentsParameters.SourceDirPath))

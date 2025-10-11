@@ -4,12 +4,17 @@ namespace FoldersSynchronizer.Support
 {
   public class FileProcessor(ArgumentsParameters argumentsParameters) : FilesSynchronizerCore(argumentsParameters)
   {
-    private static readonly List<string> _filesToDeletePaths = new();
+    private static readonly List<string> _filesToProcessRelativePaths = new();
 
-    public static void PerformFilesDeletion()
+    public static void PerformFilesCopying()
     {
-      foreach (var deletePath in _filesToDeletePaths)
-        File.Delete(deletePath);
+
+    }
+
+    public void PerformFilesDeletion()
+    {
+      foreach (var relativeDeletePath in _filesToProcessRelativePaths)
+        File.Delete(UseFullPath(relativeDeletePath, PathType.Target));
     }
 
     public void PerformFilesScan()
@@ -32,7 +37,7 @@ namespace FoldersSynchronizer.Support
           }
         }
 
-        if (!matchFound) _filesToDeletePaths.Add(targetFile.Path);
+        if (!matchFound) _filesToProcessRelativePaths.Add(GetRelativePath(targetFile.Path));
       }
     }
 

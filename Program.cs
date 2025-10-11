@@ -19,9 +19,9 @@ class Program
         dataReceiver.ReceiveData();
 
         dirProcessor.PerformDirsScan();
-        DirProcessor.PerformDirsDeletion();
+        dirProcessor.PerformDirsDeletion();
 
         fileProcessor.PerformFilesScan();
-        FileProcessor.PerformFilesDeletion();
+        fileProcessor.PerformFilesDeletion();
     }
 }
