@@ -16,7 +16,8 @@ namespace FoldersSynchronizer.Support
 
     public void PerformFoldersScan()
     {
-      ScanFolder(SourceDirDetails.Dirs, TargetDirDetails.Dirs);
+      if (!Directory.Exists(argumentsParameters.TargetDirPath))
+        ScanFolder(sourceDirDetails.Dirs, targetDirDetails.Dirs);
     }
 
     public void ScanFolder(List<DirDetails> sourceDir, List<DirDetails> targetDir)
@@ -55,10 +56,10 @@ namespace FoldersSynchronizer.Support
 
     protected string GetRelativePath(string fullPath)
     {
-      if (fullPath.StartsWith(ArgumentsParameters.SourceDirPath))
-        fullPath = fullPath.Split(ArgumentsParameters.SourceDirPath)[1];
-      if (fullPath.StartsWith(ArgumentsParameters.TargetDirPath))
-        fullPath = fullPath.Split(ArgumentsParameters.TargetDirPath)[1];
+      if (fullPath.StartsWith(argumentsParameters.SourceDirPath))
+        fullPath = fullPath.Split(argumentsParameters.SourceDirPath)[1];
+      if (fullPath.StartsWith(argumentsParameters.TargetDirPath))
+        fullPath = fullPath.Split(argumentsParameters.TargetDirPath)[1];
 
       return fullPath;
     }

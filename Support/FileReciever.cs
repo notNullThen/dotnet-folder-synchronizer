@@ -6,13 +6,13 @@ namespace FoldersSynchronizer.Support
   {
     public void RecieveDirs()
     {
-      if (!Directory.Exists(ArgumentsParameters.SourceDirPath)) throw new DirectoryNotFoundException(
-        $"The Source Directory '{SourceDirDetails.Path}' was not found.\nPlease provide correct path in '{ArgumentsParameters.SourceDirArgument}' argument.");
+      if (!Directory.Exists(argumentsParameters.SourceDirPath)) throw new DirectoryNotFoundException(
+        $"The Source Directory '{sourceDirDetails.Path}' was not found.\nPlease provide correct path in '{ArgumentsParameters.SourceDirArgument}' argument.");
 
-      SourceDirDetails = GetDirDetails(ArgumentsParameters.SourceDirPath);
+      sourceDirDetails = GetDirDetails(argumentsParameters.SourceDirPath);
 
-      if (Directory.Exists(ArgumentsParameters.TargetDirPath))
-        TargetDirDetails = GetDirDetails(ArgumentsParameters.TargetDirPath);
+      if (Directory.Exists(argumentsParameters.TargetDirPath))
+        targetDirDetails = GetDirDetails(argumentsParameters.TargetDirPath);
     }
 
     private static DirDetails GetDirDetails(string dirPath)

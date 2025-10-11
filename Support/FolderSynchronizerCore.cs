@@ -5,9 +5,9 @@ namespace FoldersSynchronizer.Support;
 
 public abstract class FolderSynchronizerCore(ArgumentsParameters argumentsParameters)
 {
-  protected ArgumentsParameters ArgumentsParameters = argumentsParameters;
+  protected ArgumentsParameters argumentsParameters = argumentsParameters;
 
-  protected static DirDetails SourceDirDetails;
-  protected static DirDetails TargetDirDetails;
+  protected static DirDetails sourceDirDetails;
+  protected static DirDetails targetDirDetails;
 
 }
