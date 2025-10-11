@@ -2,7 +2,7 @@ using FoldersSynchronizer.Support.Details;
 
 namespace FoldersSynchronizer.Support
 {
-  public class FolderScanner(ArgumentsParameters argumentsParameters) : FilesSynchronizerCore(argumentsParameters)
+  public class DirScanner(ArgumentsParameters argumentsParameters) : FilesSynchronizerCore(argumentsParameters)
   {
     static readonly List<string> DirsToDeletePaths = new();
 
