@@ -9,11 +9,11 @@ class Program
         args = ["--sourceDir", "../../../DataToTestOn/SourceFolder", "--targetDir", "../../../DataToTestOn/TargetFolder", "--logs", "../../../DataToTestOn/logs.txt"];
         // For debugging in VS Code uncomment the line bellow:
 
-        var argumentsProcessor = ArgumentsProcessor.GetParametersFromArguments(args);
-        var logger = new Logger(argumentsProcessor.LogsFilePath);
+        var argumentsParameters = ArgumentsProcessor.GetParametersFromArguments(args);
+        var logger = new Logger(argumentsParameters.LogsFilePath);
 
-        var dataReceiver = new DataReceiver(argumentsProcessor);
-        var dirProcessor = new DirProcessor(argumentsProcessor);
+        var dataReceiver = new DataReceiver(argumentsParameters);
+        var dirProcessor = new DirProcessor(argumentsParameters);
 
         dataReceiver.ReceiveData();
 
