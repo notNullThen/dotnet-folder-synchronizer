@@ -4,9 +4,28 @@ namespace FoldersSynchronizer.Support
 {
   public class FileProcessor(ArgumentsParameters argumentsParameters) : FilesSynchronizerCore(argumentsParameters)
   {
+    List<FileDetails> _filesToDelete;
 
+    public void PerformFilesScan()
+    {
+      ScanFiles(sourceDirDetails.Files, targetDirDetails.Files);
+    }
 
-    public bool AreFilesEqual(FileDetails sourceFile, FileDetails targetFile)
+    private void ScanFiles(List<FileDetails> sourceFiles, List<FileDetails> targetFiles)
+    {
+      foreach (var sourceFile in sourceFiles)
+      {
+        foreach (var targetFile in targetFiles)
+        {
+          if (!AreFilesEqual(sourceFile, targetFile))
+          {
+            _filesToDelete.Add(targetFile);
+          }
+        }
+      }
+    }
+
+    private bool AreFilesEqual(FileDetails sourceFile, FileDetails targetFile)
     {
       var sourceFileRelativePath = GetRelativePath(sourceFile.Path);
       var targetFileRelativePath = GetRelativePath(targetFile.Path);
