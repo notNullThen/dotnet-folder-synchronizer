@@ -11,13 +11,11 @@ class Program
 
         var argumentParameters = ArgumentsProcessor.GetParametersFromArguments(args);
         var logger = new Logger(argumentParameters.LogsFilePath);
-        var folderSynchronizerCore = new FolderSynchronizerCore(logger, argumentParameters);
 
-        folderSynchronizerCore.RecieveFiles();
-        folderSynchronizerCore.ScanDir();
-        if (argumentParameters.DebugValue) folderSynchronizerCore.Debug();
-        // folderSynchronizerCore.DeleteTargetDirs();
-        // folderSynchronizerCore.DeleteTargetFiles();
-        // folderSynchronizerCore.CopyFiles();
+        var fileReceiver = new FileReceiver(argumentParameters);
+        var folderScanner = new FolderScaner(argumentParameters);
+
+        fileReceiver.RecieveFiles();
+        folderScanner.InitFoldersScan();
     }
 }
