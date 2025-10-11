@@ -6,18 +6,18 @@ namespace FoldersSynchronizer.Support
   {
     private static readonly List<string> _dirsToDeletePaths = new();
 
-    public static void PerformFoldersDeletion()
+    public static void PerformDirsDeletion()
     {
       foreach (var deletePath in _dirsToDeletePaths)
         Directory.Delete(deletePath, recursive: true);
     }
 
-    public void PerformFoldersScan()
+    public void PerformDirsScan()
     {
-      ScanFolder(sourceDirDetails.Dirs, targetDirDetails.Dirs);
+      ScanDir(sourceDirDetails.Dirs, targetDirDetails.Dirs);
     }
 
-    private void ScanFolder(List<DirDetails> sourceDir, List<DirDetails> targetDir)
+    private void ScanDir(List<DirDetails> sourceDir, List<DirDetails> targetDir)
     {
       foreach (var targetSubDir in targetDir)
       {
@@ -28,7 +28,7 @@ namespace FoldersSynchronizer.Support
           if (AreDirsEqual(sourceSubDir, targetSubDir))
           {
             matchFound = true;
-            ScanFolder(sourceSubDir.Dirs, targetSubDir.Dirs);
+            ScanDir(sourceSubDir.Dirs, targetSubDir.Dirs);
             break;
           }
         }

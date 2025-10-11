@@ -18,8 +18,8 @@ class Program
 
         dataReceiver.ReceiveData();
 
-        dirProcessor.PerformFoldersScan();
-        DirProcessor.PerformFoldersDeletion();
+        dirProcessor.PerformDirsScan();
+        DirProcessor.PerformDirsDeletion();
 
         fileProcessor.PerformFilesScan();
         FileProcessor.PerformFilesDeletion();
