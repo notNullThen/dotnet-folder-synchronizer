@@ -8,8 +8,8 @@ namespace FoldersSynchronizer.Support
 
     public void PerformDirsDeletion()
     {
-      foreach (var relativeDeletePath in _dirsToDeleteRelativePaths)
-        Directory.Delete(UseFullPath(relativeDeletePath, PathType.Target), recursive: true);
+      foreach (var relativePath in _dirsToDeleteRelativePaths)
+        Directory.Delete(UseFullPath(relativePath, PathType.Target), recursive: true);
     }
 
     public void PerformDirsScan()

@@ -6,15 +6,16 @@ namespace FoldersSynchronizer.Support
   {
     private static readonly List<string> _filesToProcessRelativePaths = new();
 
-    public static void PerformFilesCopying()
+    public void PerformFilesCopying()
     {
-
+      foreach (var relativePath in _filesToProcessRelativePaths)
+        File.Copy(UseFullPath(relativePath, PathType.Source), UseFullPath(relativePath, PathType.Target));
     }
 
     public void PerformFilesDeletion()
     {
-      foreach (var relativeDeletePath in _filesToProcessRelativePaths)
-        File.Delete(UseFullPath(relativeDeletePath, PathType.Target));
+      foreach (var relativePath in _filesToProcessRelativePaths)
+        File.Delete(UseFullPath(relativePath, PathType.Target));
     }
 
     public void PerformFilesScan()
