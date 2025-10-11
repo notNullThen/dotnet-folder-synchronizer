@@ -4,7 +4,7 @@ namespace FoldersSynchronizer.Support
 {
   public class DirReceiver(ArgumentsParameters argumentsParameters) : FilesSynchronizerCore(argumentsParameters)
   {
-    public void RecieveDirs()
+    public void ReceiveData()
     {
       if (!Directory.Exists(argumentsParameters.SourceDirPath)) throw new DirectoryNotFoundException(
         $"The Source Directory '{sourceDirDetails.Path}' was not found.\nPlease provide correct path in '{ArgumentsParameters.SourceDirArgument}' argument.");
