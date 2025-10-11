@@ -12,7 +12,7 @@ class Program
         var argumentParameters = ArgumentsProcessor.GetParametersFromArguments(args);
         var logger = new Logger(argumentParameters.LogsFilePath);
 
-        var dirReceiver = new DirReceiver(argumentParameters);
+        var dirReceiver = new DataReceiver(argumentParameters);
         var folderScanner = new DirScanner(argumentParameters);
 
         dirReceiver.ReceiveData();
