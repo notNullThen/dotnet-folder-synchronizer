@@ -4,7 +4,13 @@ namespace FoldersSynchronizer.Support
 {
   public class FileProcessor(ArgumentsParameters argumentsParameters) : FilesSynchronizerCore(argumentsParameters)
   {
-    List<FileDetails> _filesToDelete;
+    private static readonly List<string> _filesToDeletePaths = new();
+
+    public static void PerformFilesDeletion()
+    {
+      foreach (var deletePath in _filesToDeletePaths)
+        File.Delete(deletePath);
+    }
 
     public void PerformFilesScan()
     {
@@ -13,15 +19,20 @@ namespace FoldersSynchronizer.Support
 
     private void ScanFiles(List<FileDetails> sourceFiles, List<FileDetails> targetFiles)
     {
-      foreach (var sourceFile in sourceFiles)
+      foreach (var targetFile in targetFiles)
       {
-        foreach (var targetFile in targetFiles)
+        bool matchFound = false;
+
+        foreach (var sourceFile in sourceFiles)
         {
-          if (!AreFilesEqual(sourceFile, targetFile))
+          if (AreFilesEqual(sourceFile, targetFile))
           {
-            _filesToDelete.Add(targetFile);
+            matchFound = true;
+            break;
           }
         }
+
+        if (!matchFound) _filesToDeletePaths.Add(targetFile.Path);
       }
     }
 

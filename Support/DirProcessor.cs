@@ -9,9 +9,7 @@ namespace FoldersSynchronizer.Support
     public static void PerformFoldersDeletion()
     {
       foreach (var deletePath in _dirsToDeletePaths)
-      {
         Directory.Delete(deletePath, recursive: true);
-      }
     }
 
     public void PerformFoldersScan()

@@ -14,11 +14,14 @@ class Program
 
         var dataReceiver = new DataReceiver(argumentsParameters);
         var dirProcessor = new DirProcessor(argumentsParameters);
+        var fileProcessor = new FileProcessor(argumentsParameters);
 
         dataReceiver.ReceiveData();
 
         dirProcessor.PerformFoldersScan();
-
         DirProcessor.PerformFoldersDeletion();
+
+        fileProcessor.PerformFilesScan();
+        FileProcessor.PerformFilesDeletion();
     }
 }
