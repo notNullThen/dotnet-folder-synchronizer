@@ -23,5 +23,6 @@ class Program
 
         fileProcessor.PerformFilesScan();
         fileProcessor.PerformFilesDeletion();
+        fileProcessor.PerformFilesCopying();
     }
 }
