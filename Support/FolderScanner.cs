@@ -2,11 +2,11 @@ using FoldersSynchronizer.Support.Details;
 
 namespace FoldersSynchronizer.Support
 {
-  public class FolderScaner(ArgumentsParameters argumentsParameters) : FilesSynchronizerCore(argumentsParameters)
+  public class FolderScanner(ArgumentsParameters argumentsParameters) : FilesSynchronizerCore(argumentsParameters)
   {
-    static List<string> DirsToDeletePaths = new();
+    static readonly List<string> DirsToDeletePaths = new();
 
-    public void PerformFoldersDeletion()
+    public static void PerformFoldersDeletion()
     {
       foreach (var deletePath in DirsToDeletePaths)
       {

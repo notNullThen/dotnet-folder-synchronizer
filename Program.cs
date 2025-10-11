@@ -13,12 +13,12 @@ class Program
         var logger = new Logger(argumentParameters.LogsFilePath);
 
         var fileReceiver = new FileReceiver(argumentParameters);
-        var folderScanner = new FolderScaner(argumentParameters);
+        var folderScanner = new FolderScanner(argumentParameters);
 
         fileReceiver.RecieveDirs();
 
         folderScanner.PerformFoldersScan();
 
-        folderScanner.PerformFoldersDeletion();
+        FolderScanner.PerformFoldersDeletion();
     }
 }
