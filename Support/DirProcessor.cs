@@ -20,7 +20,7 @@ namespace FoldersSynchronizer.Support
         ScanFolder(sourceDirDetails.Dirs, targetDirDetails.Dirs);
     }
 
-    public void ScanFolder(List<DirDetails> sourceDir, List<DirDetails> targetDir)
+    private void ScanFolder(List<DirDetails> sourceDir, List<DirDetails> targetDir)
     {
       foreach (var targetSubDir in targetDir)
       {
@@ -40,28 +40,11 @@ namespace FoldersSynchronizer.Support
       }
     }
 
-    public bool AreFilesEqual(FileDetails sourceFile, FileDetails targetFile)
-    {
-      var sourceFileRelativePath = GetRelativePath(sourceFile.Path);
-      var targetFileRelativePath = GetRelativePath(targetFile.Path);
-      return sourceFileRelativePath.Equals(targetFileRelativePath) && sourceFile.MD5.Equals(targetFile.MD5);
-    }
-
-    public bool AreDirsEqual(DirDetails sourceDir, DirDetails targetDir)
+    private bool AreDirsEqual(DirDetails sourceDir, DirDetails targetDir)
     {
       var sourceDirRelativePath = GetRelativePath(sourceDir.Path);
       var targetDirRelativePath = GetRelativePath(targetDir.Path);
       return sourceDirRelativePath.Equals(targetDirRelativePath);
-    }
-
-    protected string GetRelativePath(string fullPath)
-    {
-      if (fullPath.StartsWith(argumentsParameters.SourceDirPath))
-        fullPath = fullPath.Split(argumentsParameters.SourceDirPath)[1];
-      if (fullPath.StartsWith(argumentsParameters.TargetDirPath))
-        fullPath = fullPath.Split(argumentsParameters.TargetDirPath)[1];
-
-      return fullPath;
     }
   }
 }
