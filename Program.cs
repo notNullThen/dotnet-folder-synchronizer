@@ -14,28 +14,35 @@ class Program
 
     static void Main(string[] args)
     {
-        // For debugging in VS Code uncomment the line bellow:
-        args = ["--sourceDir", "../../../DataToTestOn/SourceFolder", "--targetDir", "../../../DataToTestOn/TargetFolder", "--logs", "../../../DataToTestOn/logs.txt", "--repeatTimePeriod", "3000", "--logPreActions"];
+        // For debugging in VS Code uncomment the line below:
+        // args = ["--sourceDir", "../../../DataToTestOn/SourceFolder", "--targetDir", "../../../DataToTestOn/TargetFolder", "--logs", "../../../DataToTestOn/logs.txt", "--repeatTimePeriod", "3000", "--logPreActions"];
 
-        var argumentsParameters = ArgumentsProcessor.GetParametersFromArguments(args);
-        _filesSynchronizer = new FilesSynchronizer(argumentsParameters);
+        var parameters = ArgumentsProcessor.GetParametersFromArguments(args);
+        _filesSynchronizer = new FilesSynchronizer(parameters);
 
-        if (argumentsParameters.RepeatTimePeriodValue == 0)
+        Console.WriteLine(appStartedMessage, DateTime.Now);
+
+        if (parameters.RepeatTimePeriodValue == 0)
         {
-            var elapsedEventArgs = new ElapsedEventArgs(DateTime.Now);
-            Console.WriteLine(syncStartedMessage, elapsedEventArgs.SignalTime);
-            _filesSynchronizer.SynchronizeFiles();
+            RunFileSync();
         }
         else
         {
-            SetTimer(argumentsParameters.RepeatTimePeriodValue);
+            RunFileSync(); // Run immediately on start
+            SetTimer(parameters.RepeatTimePeriodValue);
 
             Console.WriteLine(pressAnyKeyMessage);
-            Console.WriteLine(appStartedMessage, DateTime.Now);
             Console.ReadLine();
+
             aTimer.Stop();
             aTimer.Dispose();
         }
+    }
+
+    private static void RunFileSync()
+    {
+        Console.WriteLine(syncStartedMessage, DateTime.Now);
+        _filesSynchronizer.SynchronizeFiles();
     }
 
     private static void SetTimer(int periodMilliseconds)
