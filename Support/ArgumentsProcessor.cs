@@ -8,7 +8,7 @@ public static class ArgumentsProcessor
     ArgumentsParameters.SourceDirArgument,
     ArgumentsParameters.TargetDirArgument,
     ArgumentsParameters.LogsArgument];
-  private static string[] _argumentsWithoutValues = [ArgumentsParameters.DebugArgument];
+  private static string[] _argumentsWithoutValues = [];
 
 
   public static ArgumentsParameters GetParametersFromArguments(string[] args)
@@ -26,10 +26,6 @@ public static class ArgumentsProcessor
       else if (arg.Key == ArgumentsParameters.TargetDirArgument)
       {
         parameters.TargetDirPath = arg.Value;
-      }
-      else if (arg.Key == ArgumentsParameters.DebugArgument)
-      {
-        parameters.DebugValue = true;
       }
       else if (arg.Key == ArgumentsParameters.LogsArgument)
       {
