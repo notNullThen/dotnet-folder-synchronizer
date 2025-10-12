@@ -8,5 +8,11 @@ namespace FoldersSynchronizer.Support
       byte[] hashBytes = System.Security.Cryptography.MD5.HashData(fileBytes);
       return Convert.ToHexString(hashBytes);
     }
+
+    public static string ParseMillisecondsToTimeString(int milliseconds)
+    {
+      TimeSpan timeSpan = TimeSpan.FromMilliseconds(milliseconds);
+      return timeSpan.ToString(@"hh\:mm\:ss");
+    }
   }
 }

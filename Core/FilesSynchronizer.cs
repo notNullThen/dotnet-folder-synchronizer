@@ -5,6 +5,7 @@ namespace FoldersSynchronizer.Core
 {
   public class FilesSynchronizer
   {
+    private readonly ArgumentsParameters _argumentsParameters;
     private readonly Logger _logger;
     private readonly DataReceiver _dataReceiver;
     private readonly DirProcessor _dirProcessor;
@@ -16,16 +17,17 @@ namespace FoldersSynchronizer.Core
       _dataReceiver = new(argumentsParameters, _logger);
       _dirProcessor = new(argumentsParameters, _logger);
       _fileProcessor = new(argumentsParameters, _logger);
+      _argumentsParameters = argumentsParameters;
     }
 
     public void RunFileSync()
     {
-      var startTime = DateTime.Now;
+      var parsedRepeatTimePeriod = Utils.ParseMillisecondsToTimeString(_argumentsParameters.RepeatTimePeriodValue);
       _logger.Log($@"
 ===============================================
 🔄🔄🔄 FILES SYNCHRONIZATION STARTED... 🔄🔄🔄
 ===============================================
-Started at: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+Started at: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + $" for each {parsedRepeatTimePeriod}");
 
       _dataReceiver.EraseData();
       _dataReceiver.ReceiveData();
@@ -42,7 +44,8 @@ Started at: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 ===============================================
 🎉🎉🎉 FILES SYNCHRONIZATION COMPLETED! 🎉🎉🎉
 ===============================================
-Completed at: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+Completed at: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + @$"
+Next run after: {parsedRepeatTimePeriod}");
     }
   }
 }
