@@ -13,6 +13,10 @@ namespace FoldersSynchronizer.Support
 
       if (Directory.Exists(argumentsParameters.TargetDirPath))
         targetDirDetails = GetDirDetails(argumentsParameters.TargetDirPath);
+      else
+      {
+        targetDirDetails = new() { Path = argumentsParameters.TargetDirPath };
+      }
     }
 
     private static DirDetails GetDirDetails(string dirPath)

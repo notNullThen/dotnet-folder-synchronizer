@@ -5,6 +5,30 @@ namespace FoldersSynchronizer.Support
   public class DirProcessor(ArgumentsParameters argumentsParameters, Logger logger) : FilesSynchronizerCore(argumentsParameters, logger)
   {
     private static readonly List<string> _dirsToDeleteRelativePaths = new();
+    private static readonly List<string> _dirsToCreateRelativePaths = new();
+
+    public void PerformDirsCreation()
+    {
+      logger.LogInfo(@"
+-------------------------------
+🗑️📁 CREATING DIRS STARTED...
+-------------------------------");
+
+      foreach (var relativePath in _dirsToCreateRelativePaths)
+      {
+        var targetPath = UseFullPath(relativePath, PathType.Target);
+        try
+        {
+          Directory.CreateDirectory(targetPath);
+          logger.LogSuccess($"🗑️📁 The \"{targetPath}\" dir is created.");
+        }
+        catch (Exception exception)
+        {
+          logger.LogError($"Failed to create \"{targetPath}\" dir. Details are below:\n({exception.GetType().Name}): {exception.Message}");
+          throw;
+        }
+      }
+    }
 
     public void PerformDirsDeletion()
     {
@@ -48,21 +72,22 @@ namespace FoldersSynchronizer.Support
         logger.LogAlert($"➕📁 The target dir \"{argumentsParameters.TargetDirPath}\" did not exist, so it was created.");
       }
 
-      ScanDir(sourceDirDetails.Dirs, targetDirDetails.Dirs);
+      DetectDirsToDelete(sourceDirDetails.Dirs, targetDirDetails.Dirs);
+      DetectDirsToCreate(sourceDirDetails.Dirs, targetDirDetails.Dirs);
     }
 
-    private void ScanDir(List<DirDetails> sourceDir, List<DirDetails> targetDir)
+    private void DetectDirsToDelete(List<DirDetails> sourceDirs, List<DirDetails> targetDirs)
     {
-      foreach (var targetSubDir in targetDir)
+      foreach (var targetSubDir in targetDirs)
       {
         bool matchFound = false;
 
-        foreach (var sourceSubDir in sourceDir)
+        foreach (var sourceSubDir in sourceDirs)
         {
           if (AreDirsEqual(sourceSubDir, targetSubDir))
           {
             matchFound = true;
-            ScanDir(sourceSubDir.Dirs, targetSubDir.Dirs);
+            DetectDirsToDelete(sourceSubDir.Dirs, targetSubDir.Dirs);
             break;
           }
         }
@@ -77,6 +102,39 @@ namespace FoldersSynchronizer.Support
         {
           if (argumentsParameters.LogPreActionsValue)
             logger.LogInfo($"⏩📁 The \"{targetSubDir.Path}\" folder will not be touched as it has equal path with a source one.");
+        }
+      }
+    }
+
+    private void DetectDirsToCreate(List<DirDetails> sourceDirs, List<DirDetails> targetDirs)
+    {
+      foreach (var sourceSubDir in sourceDirs)
+      {
+        bool matchFound = false;
+
+        foreach (var targetSubDir in targetDirs)
+        {
+          if (AreDirsEqual(sourceSubDir, targetSubDir))
+          {
+            matchFound = true;
+            DetectDirsToCreate(sourceSubDir.Dirs, targetSubDir.Dirs);
+            break;
+          }
+        }
+
+        if (!matchFound)
+        {
+          _dirsToCreateRelativePaths.Add(GetRelativePath(sourceSubDir.Path));
+          if (argumentsParameters.LogPreActionsValue)
+            logger.LogInfo($"🗑️📁 The \"{sourceSubDir.Path}\" folder will be deleted.");
+
+          targetDirs.Add(new() { Path = UseFullPath(GetRelativePath(sourceSubDir.Path), PathType.Target) });
+          DetectDirsToCreate(sourceSubDir.Dirs, targetDirs.Last().Dirs);
+        }
+        else
+        {
+          if (argumentsParameters.LogPreActionsValue)
+            logger.LogInfo($"⏩📁 The \"{sourceSubDir.Path}\" folder will not be touched as it has equal path with a source one.");
         }
       }
     }

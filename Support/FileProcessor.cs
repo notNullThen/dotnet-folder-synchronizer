@@ -114,14 +114,16 @@ namespace FoldersSynchronizer.Support
 
     private void DetectFilesToCopy(DirDetails sourceDir, DirDetails targetDir)
     {
-      foreach (var targetSubDir in targetDir.Dirs)
+      foreach (var sourceSubDir in sourceDir.Dirs)
       {
-        foreach (var sourceSubDir in sourceDir.Dirs)
+        foreach (var targetSubDir in targetDir.Dirs)
+        {
           if (AreDirsEqual(sourceSubDir, targetSubDir))
           {
             DetectFilesToCopy(sourceSubDir, targetSubDir);
             break;
           }
+        }
       }
 
       foreach (var sourceFile in sourceDir.Files)
