@@ -12,4 +12,5 @@ public class ArgumentsParameters
   public string TargetDirPath { get; set; }
   public string LogsFilePath { get; set; }
   public bool LogPreActionsValue { get; set; }
+  public int RepeatTimePeriodValue { get; set; }
 }

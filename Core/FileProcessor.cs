@@ -5,9 +5,6 @@ namespace FoldersSynchronizer.Core
 {
   public class FileProcessor(ArgumentsParameters argumentsParameters, Logger logger) : FilesSynchronizerCore(argumentsParameters, logger)
   {
-    private static readonly List<string> _filesToDeleteRelativePaths = new();
-    private static readonly List<string> _filesToCopyRelativePaths = new();
-
     public void PerformFilesCopying()
     {
       logger.Log(@"

@@ -38,6 +38,17 @@ public static class ArgumentsProcessor
       {
         parameters.LogPreActionsValue = true;
       }
+      else if (arg.Key == ArgumentsParameters.RepeatTimePeriod)
+      {
+        try
+        {
+          parameters.RepeatTimePeriodValue = int.Parse(arg.Value);
+        }
+        catch
+        {
+          throw new Exception($"You provided wrong '{ArgumentsParameters.RepeatTimePeriod}' argument value, which should be specified in milliseconds.");
+        }
+      }
       else
       {
         throw new Exception($"The entered '{arg.Key}' argument is wrong.");

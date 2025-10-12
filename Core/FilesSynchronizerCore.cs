@@ -11,10 +11,21 @@ public abstract class FilesSynchronizerCore(ArgumentsParameters argumentsParamet
   protected static DirDetails sourceDirDetails;
   protected static DirDetails targetDirDetails;
 
+  protected static List<string> _filesToDeleteRelativePaths = new();
+  protected static List<string> _filesToCopyRelativePaths = new();
+
   protected enum PathType
   {
     Source,
     Target
+  }
+
+  public void EraseData()
+  {
+    sourceDirDetails = new() { Path = argumentsParameters.SourceDirPath };
+    targetDirDetails = new() { Path = argumentsParameters.TargetDirPath };
+    _filesToDeleteRelativePaths = new();
+    _filesToCopyRelativePaths = new();
   }
 
   protected string UseFullPath(string relativePath, PathType pathType)

@@ -20,6 +20,14 @@ namespace FoldersSynchronizer.Core
 
     public void SynchronizeFiles()
     {
+      var startTime = DateTime.Now;
+      _logger.Log($@"
+===============================================
+🔄🔄🔄 FILES SYNCHRONIZATION STARTED... 🔄🔄🔄
+===============================================
+Started at: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+      _dataReceiver.EraseData();
       _dataReceiver.ReceiveData();
 
       _dirProcessor.PerformDirsScan();
@@ -29,6 +37,12 @@ namespace FoldersSynchronizer.Core
       _fileProcessor.PerformFilesScan();
       _fileProcessor.PerformFilesDeletion();
       _fileProcessor.PerformFilesCopying();
+
+      _logger.Log(@"
+===============================================
+🎉🎉🎉 FILES SYNCHRONIZATION COMPLETED! 🎉🎉🎉
+===============================================
+Completed at: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
     }
   }
 }
