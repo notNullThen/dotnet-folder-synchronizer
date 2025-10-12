@@ -7,8 +7,12 @@ namespace FoldersSynchronizer.Core
   {
     public void ReceiveData()
     {
-      if (!Directory.Exists(argumentsParameters.SourceDirPath)) throw new DirectoryNotFoundException(
-        $"The Source Directory '{sourceDirDetails.Path}' was not found.\nPlease provide correct path in '{ArgumentsParameters.SourceDirArgument}' argument.");
+      if (!Directory.Exists(argumentsParameters.SourceDirPath))
+      {
+        logger.LogError(
+@$"The Source Directory '{sourceDirDetails.Path}' was not found.
+Please provide correct path in '{ArgumentsParameters.SourceDirArgument}' argument.", true);
+      }
 
       sourceDirDetails = GetDirDetails(argumentsParameters.SourceDirPath);
 

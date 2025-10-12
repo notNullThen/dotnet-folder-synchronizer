@@ -46,28 +46,28 @@ public static class ArgumentsProcessor
         }
         catch
         {
-          throw new Exception($"You provided wrong '{ArgumentsParameters.RepeatTimePeriod}' argument value, which should be specified in milliseconds.");
+          throw new Exception($"🚫 You provided wrong '{ArgumentsParameters.RepeatTimePeriod}' argument value, which should be specified in milliseconds.");
         }
       }
       else
       {
-        throw new Exception($"The entered '{arg.Key}' argument is wrong.");
+        throw new Exception($"🚫 The entered '{arg.Key}' argument is wrong.");
       }
     }
 
     if (string.IsNullOrWhiteSpace(parameters.SourceDirPath))
     {
-      throw new Exception($"You did not provide the '{ArgumentsParameters.SourceDirArgument}' argument");
+      throw new Exception($"🚫 You did not provide the '{ArgumentsParameters.SourceDirArgument}' argument");
     }
 
     if (string.IsNullOrWhiteSpace(parameters.TargetDirPath))
     {
-      throw new Exception($"You did not provide the '{ArgumentsParameters.TargetDirArgument}' argument");
+      throw new Exception($"🚫 You did not provide the '{ArgumentsParameters.TargetDirArgument}' argument");
     }
 
     if (string.IsNullOrWhiteSpace(parameters.LogsFilePathValue))
     {
-      throw new Exception($"You did not provide the '{ArgumentsParameters.LogsArgument}' argument");
+      throw new Exception($"🚫 You did not provide the '{ArgumentsParameters.LogsArgument}' argument");
     }
 
     return parameters;
@@ -95,7 +95,7 @@ public static class ArgumentsProcessor
 
         if (value.StartsWith(ArgumentsParameters.Prefix))
         {
-          throw new Exception($"{ArgsStrtuctureErrorMessage}: value of '{key}' argument starts with '{ArgumentsParameters.Prefix}'");
+          throw new Exception($"🚫 {ArgsStrtuctureErrorMessage}: value of '{key}' argument starts with '{ArgumentsParameters.Prefix}'");
         }
 
         parsedArgs.Add(key, value);
