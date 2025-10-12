@@ -1,4 +1,4 @@
-namespace FoldersSynchronizer.Support.Details;
+namespace FoldersSynchronizer.Support.Types;
 
 public class DirDetails
 {

@@ -1,4 +1,4 @@
-namespace FoldersSynchronizer.Support;
+namespace FoldersSynchronizer.Support.Types;
 
 public class ArgumentsParameters
 {

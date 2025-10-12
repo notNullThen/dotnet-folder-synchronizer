@@ -3,7 +3,7 @@ namespace FoldersSynchronizer.Support;
 public class Logger
 {
   private readonly string _logsFilePath;
-  private bool _consoleLog = true;
+  private readonly bool _consoleLog = true;
   public Logger(string logsFilePath, bool consoleLog = true)
   {
     File.Delete(logsFilePath);

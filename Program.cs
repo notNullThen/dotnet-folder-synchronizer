@@ -1,4 +1,5 @@
-﻿using FoldersSynchronizer.Support;
+﻿using FoldersSynchronizer.Core;
+using FoldersSynchronizer.Support;
 
 namespace FoldersSynchronizer;
 

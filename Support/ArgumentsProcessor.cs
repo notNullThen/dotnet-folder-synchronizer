@@ -1,3 +1,5 @@
+using FoldersSynchronizer.Support.Types;
+
 namespace FoldersSynchronizer.Support;
 
 public static class ArgumentsProcessor

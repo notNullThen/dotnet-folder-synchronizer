@@ -1,6 +1,7 @@
-using FoldersSynchronizer.Support.Details;
+using FoldersSynchronizer.Support;
+using FoldersSynchronizer.Support.Types;
 
-namespace FoldersSynchronizer.Support;
+namespace FoldersSynchronizer.Core;
 
 public abstract class FilesSynchronizerCore(ArgumentsParameters argumentsParameters, Logger logger)
 {
