@@ -11,20 +11,8 @@ class Program
         // args = ["--sourceDir", "../../../DataToTestOn/SourceFolder", "--targetDir", "../../../DataToTestOn/TargetFolder", "--logs", "../../../DataToTestOn/logs.txt", "--logPreActions"];
 
         var argumentsParameters = ArgumentsProcessor.GetParametersFromArguments(args);
-        var logger = new Logger(argumentsParameters.LogsFilePath);
+        var filesSynchronizer = new FilesSynchronizer(argumentsParameters);
 
-        var dataReceiver = new DataReceiver(argumentsParameters, logger);
-        var dirProcessor = new DirProcessor(argumentsParameters, logger);
-        var fileProcessor = new FileProcessor(argumentsParameters, logger);
-
-        dataReceiver.ReceiveData();
-
-        dirProcessor.PerformDirsScan();
-        dirProcessor.PerformDirsDeletion();
-        dirProcessor.PerformDirsCreation();
-
-        fileProcessor.PerformFilesScan();
-        fileProcessor.PerformFilesDeletion();
-        fileProcessor.PerformFilesCopying();
+        filesSynchronizer.SynchronizeFiles();
     }
 }
