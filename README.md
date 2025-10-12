@@ -2,6 +2,8 @@
 
 A C# console app that periodically synchronizes a target folder with a source folder to keep them identical.
 
+<img src="images/screenshot.png" alt="Screenshot" width="800"/>
+
 **💡 Optimization:** The application does not touch folders and files that have identical relative paths and MD5 hashes (for files).
 
 ### ✨ It can:
