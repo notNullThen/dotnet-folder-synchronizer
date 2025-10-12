@@ -9,7 +9,10 @@ namespace FoldersSynchronizer.Support
 
     public void PerformFilesCopying()
     {
-      logger.LogInfo($"💾📄 COPYING FILES STARTED...");
+      logger.LogInfo(@"
+-------------------------------
+💾📄 COPYING FILES STARTED...
+-------------------------------");
 
       foreach (var relativePath in _filesToCopyRelativePaths)
       {
@@ -31,7 +34,10 @@ namespace FoldersSynchronizer.Support
 
     public void PerformFilesDeletion()
     {
-      logger.LogInfo($"🗑️📄 DELETING FILES STARTED...");
+      logger.LogInfo(@"
+--------------------------------
+🗑️📄 DELETING FILES STARTED...
+--------------------------------");
 
       foreach (var relativePath in _filesToDeleteRelativePaths)
       {
@@ -53,7 +59,10 @@ namespace FoldersSynchronizer.Support
     public void PerformFilesScan()
     {
       if (argumentsParameters.LogPreActionsValue)
-        logger.LogInfo($"🔍📄 SCANNING TARGET DIRECTORY FOR FILES TO COPY/DELETE STARTED...");
+        logger.LogInfo(@"
+--------------------------------------------------------------------
+🔍📄 SCANNING TARGET DIRECTORY FOR FILES TO COPY/DELETE STARTED...
+--------------------------------------------------------------------");
 
       DetectFilesToCopy(sourceDirDetails, targetDirDetails);
       DetectFilesToDelete(sourceDirDetails, targetDirDetails);
