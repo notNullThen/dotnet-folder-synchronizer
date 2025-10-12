@@ -53,7 +53,7 @@ namespace FoldersSynchronizer.Support
     public void PerformFilesScan()
     {
       if (argumentsParameters.LogPreActionsValue)
-        logger.LogInfo($"🔍📄 SCANNING TARGET DIRECTORY FOR FILES TO COPY/DELETE...");
+        logger.LogInfo($"🔍📄 SCANNING TARGET DIRECTORY FOR FILES TO COPY/DELETE STARTED...");
 
       DetectFilesToCopy(sourceDirDetails, targetDirDetails);
       DetectFilesToDelete(sourceDirDetails, targetDirDetails);
