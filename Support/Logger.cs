@@ -14,11 +14,9 @@ public class Logger
   public void LogInfo(string message)
   {
     var header = "ℹ️ Info:\n";
-    message = header + message + "\n\n";
+    message = header + message;
 
-    if (_consoleLog)
-      Console.Write(message);
-    File.AppendAllText(_logsFilePath, message);
+    Log(message);
   }
 
   public void LogSuccess(string message)
@@ -26,15 +24,28 @@ public class Logger
     var header = "✅ Success:\n";
     message = header + message;
 
-    if (_consoleLog)
-      Console.Write(message);
-    File.AppendAllText(_logsFilePath, message);
+    Log(message);
+  }
+
+  public void LogAlert(string message)
+  {
+    var header = "⚠️ Alert\n";
+    message = header + message;
+
+    Log(message);
   }
 
   public void LogError(string message, bool throwException = false)
   {
     var header = "💥💥💥 Error 💥💥💥\n";
     message = header + message;
+
+    Log(message, throwException);
+  }
+
+  private void Log(string message, bool throwException = false)
+  {
+    message += "\n\n";
 
     if (_consoleLog)
       Console.Write(message);

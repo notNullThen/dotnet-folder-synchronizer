@@ -13,6 +13,11 @@ namespace FoldersSynchronizer.Support
         var targetPath = UseFullPath(relativePath, PathType.Target);
         try
         {
+          if (!Directory.Exists(targetPath))
+          {
+            logger.LogAlert($"The \"{targetPath}\" dir already does not exist, so no need to delete it.");
+            continue;
+          }
           Directory.Delete(targetPath, recursive: true);
           logger.LogSuccess($"The \"{targetPath}\" dir and files it contains are deleted.");
         }
@@ -45,8 +50,17 @@ namespace FoldersSynchronizer.Support
           }
         }
 
-        if (!matchFound) _dirsToDeleteRelativePaths.Add(targetSubDir.Path);
-        else logger.LogInfo($"The \"{targetSubDir.Path}\" folder will not be touched as it has equal path with a source.");
+        if (!matchFound)
+        {
+          _dirsToDeleteRelativePaths.Add(targetSubDir.Path);
+          if (argumentsParameters.LogPreActionsValue)
+            logger.LogInfo($"The \"{targetSubDir.Path}\" folder will be deleted.");
+        }
+        else
+        {
+          if (argumentsParameters.LogPreActionsValue)
+            logger.LogInfo($"The \"{targetSubDir.Path}\" folder will not be touched as it has equal path with a source one.");
+        }
       }
     }
   }

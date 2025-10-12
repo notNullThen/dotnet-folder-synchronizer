@@ -8,7 +8,7 @@ public static class ArgumentsProcessor
     ArgumentsParameters.SourceDirArgument,
     ArgumentsParameters.TargetDirArgument,
     ArgumentsParameters.LogsArgument];
-  private static string[] _argumentsWithoutValues = [];
+  private static string[] _argumentsWithoutValues = [ArgumentsParameters.LogPreActions];
 
 
   public static ArgumentsParameters GetParametersFromArguments(string[] args)
@@ -30,6 +30,10 @@ public static class ArgumentsProcessor
       else if (arg.Key == ArgumentsParameters.LogsArgument)
       {
         parameters.LogsFilePath = arg.Value;
+      }
+      else if (arg.Key == ArgumentsParameters.LogPreActions)
+      {
+        parameters.LogPreActionsValue = true;
       }
       else
       {

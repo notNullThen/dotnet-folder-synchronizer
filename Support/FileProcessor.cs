@@ -51,7 +51,16 @@ namespace FoldersSynchronizer.Support
         }
 
         if (!matchFound)
+        {
           _filesToDeleteRelativePaths.Add(GetRelativePath(targetFile.Path));
+          if (argumentsParameters.LogPreActionsValue)
+            logger.LogInfo($"The \"{targetFile.Path}\" file will be deleted.");
+        }
+        else
+        {
+          if (argumentsParameters.LogPreActionsValue)
+            logger.LogInfo($"The \"{targetFile.Path}\" file will not be touched as it is equal with a source one.");
+        }
       }
     }
 
@@ -81,7 +90,12 @@ namespace FoldersSynchronizer.Support
         }
 
         if (!matchFound)
+        {
           _filesToCopyRelativePaths.Add(GetRelativePath(sourceFile.Path));
+          if (argumentsParameters.LogPreActionsValue)
+            logger.LogInfo($"The \"{sourceFile.Path}\" file will be copied.");
+        }
+        // Ignored files already logged in the deletion method
       }
     }
 
