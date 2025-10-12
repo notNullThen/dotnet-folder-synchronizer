@@ -6,11 +6,12 @@ public static class ArgumentsProcessor
 {
   private const string ArgsStrtuctureErrorMessage = "Arguments structure is wrong";
 
-  private static string[] _argumentsWithValues = [
+  private static readonly string[] _argumentsWithValues = [
     ArgumentsParameters.SourceDirArgument,
     ArgumentsParameters.TargetDirArgument,
-    ArgumentsParameters.LogsArgument];
-  private static string[] _argumentsWithoutValues = [ArgumentsParameters.LogPreActions];
+    ArgumentsParameters.LogsArgument,
+    ArgumentsParameters.RepeatTimePeriod];
+  private static readonly string[] _argumentsWithoutValues = [ArgumentsParameters.LogPreActions];
 
 
   public static ArgumentsParameters GetParametersFromArguments(string[] args)

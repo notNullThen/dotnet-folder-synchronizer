@@ -6,6 +6,7 @@ public class ArgumentsParameters
   public static readonly string SourceDirArgument = Prefix + "sourceDir";
   public static readonly string TargetDirArgument = Prefix + "targetDir";
   public static readonly string LogsArgument = Prefix + "logs";
+  public static readonly string RepeatTimePeriod = Prefix + "repeatTimePeriod";
   public static readonly string LogPreActions = Prefix + "logPreActions";
   public string SourceDirPath { get; set; }
   public string TargetDirPath { get; set; }
