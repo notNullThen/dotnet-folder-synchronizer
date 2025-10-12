@@ -13,7 +13,7 @@ public class Logger
 
   public void LogInfo(string message)
   {
-    var header = "ℹ️ Info:\n";
+    var header = "ℹ️ ";
     message = header + message;
 
     Log(message);
@@ -21,7 +21,7 @@ public class Logger
 
   public void LogSuccess(string message)
   {
-    var header = "✅ Success:\n";
+    var header = "✅ ";
     message = header + message;
 
     Log(message);
@@ -29,7 +29,7 @@ public class Logger
 
   public void LogAlert(string message)
   {
-    var header = "⚠️ Alert\n";
+    var header = "⚠️ ";
     message = header + message;
 
     Log(message);
