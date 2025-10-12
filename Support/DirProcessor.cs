@@ -48,7 +48,6 @@ namespace FoldersSynchronizer.Support
         logger.LogAlert($"➕📁 The target dir \"{argumentsParameters.TargetDirPath}\" did not exist, so it was created.");
       }
 
-
       ScanDir(sourceDirDetails.Dirs, targetDirDetails.Dirs);
     }
 
