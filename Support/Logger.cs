@@ -43,7 +43,7 @@ public class Logger
     Log(message, throwException);
   }
 
-  private void Log(string message, bool throwException = false)
+  public void Log(string message, bool throwException = false)
   {
     message += "\n\n";
 

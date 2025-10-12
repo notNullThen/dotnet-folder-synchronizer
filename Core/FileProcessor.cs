@@ -10,7 +10,7 @@ namespace FoldersSynchronizer.Core
 
     public void PerformFilesCopying()
     {
-      logger.LogInfo(@"
+      logger.Log(@"
 -------------------------------
 💾📄 COPYING FILES STARTED...
 -------------------------------");
@@ -35,7 +35,7 @@ namespace FoldersSynchronizer.Core
 
     public void PerformFilesDeletion()
     {
-      logger.LogInfo(@"
+      logger.Log(@"
 --------------------------------
 🗑️📄 DELETING FILES STARTED...
 --------------------------------");
@@ -60,7 +60,7 @@ namespace FoldersSynchronizer.Core
     public void PerformFilesScan()
     {
       if (argumentsParameters.LogPreActionsValue)
-        logger.LogInfo(@"
+        logger.Log(@"
 --------------------------------------------------------------------
 🔍📄 SCANNING TARGET DIRECTORY FOR FILES TO COPY/DELETE STARTED...
 --------------------------------------------------------------------");

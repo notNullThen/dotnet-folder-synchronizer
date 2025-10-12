@@ -10,7 +10,7 @@ namespace FoldersSynchronizer.Core
 
     public void PerformDirsCreation()
     {
-      logger.LogInfo(@"
+      logger.Log(@"
 -------------------------------
 🗑️📁 CREATING DIRS STARTED...
 -------------------------------");
@@ -33,7 +33,7 @@ namespace FoldersSynchronizer.Core
 
     public void PerformDirsDeletion()
     {
-      logger.LogInfo(@"
+      logger.Log(@"
 -------------------------------
 🗑️📁 DELETING DIRS STARTED...
 -------------------------------");
@@ -62,7 +62,7 @@ namespace FoldersSynchronizer.Core
     public void PerformDirsScan()
     {
       if (argumentsParameters.LogPreActionsValue)
-        logger.LogInfo(@"
+        logger.Log(@"
 --------------------------------------------------------------
 🔍📁 SCANNING TARGET DIRECTORY FOR DIRS TO DELETE STARTED...
 --------------------------------------------------------------");
