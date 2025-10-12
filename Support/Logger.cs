@@ -6,7 +6,14 @@ public class Logger
   private readonly bool _consoleLog = true;
   public Logger(string logsFilePath, bool consoleLog = true)
   {
-    File.Delete(logsFilePath);
+    try
+    {
+      File.Delete(logsFilePath);
+    }
+    catch (Exception exception)
+    {
+      throw new Exception($"\n🚫 Cannot delete or access log file: '{logsFilePath}'.\n💡 It's a good idea to check if the path provided is correct.\nError details are below:\n{exception.Message}");
+    }
     _logsFilePath = logsFilePath;
     _consoleLog = consoleLog;
   }
