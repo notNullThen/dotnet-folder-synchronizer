@@ -9,7 +9,7 @@ namespace FoldersSynchronizer
 		private static System.Timers.Timer aTimer;
 		private static Logger _logger;
 		private static FilesSynchronizer _filesSynchronizer;
-		private static bool _isRunning = false; // Prevent overlapping runs
+		private static bool _isRunning = false;
 
 		static void Main(string[] args)
 		{
