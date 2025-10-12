@@ -9,6 +9,8 @@ namespace FoldersSynchronizer.Support
 
     public void PerformFilesCopying()
     {
+      logger.LogInfo($"💾📄 COPYING FILES STARTED...");
+
       foreach (var relativePath in _filesToCopyRelativePaths)
       {
         var sourceCopyPath = UseFullPath(relativePath, PathType.Source);
@@ -29,6 +31,8 @@ namespace FoldersSynchronizer.Support
 
     public void PerformFilesDeletion()
     {
+      logger.LogInfo($"🗑️📄 DELETING FILES STARTED...");
+
       foreach (var relativePath in _filesToDeleteRelativePaths)
       {
         var targetDeletePath = UseFullPath(relativePath, PathType.Target);

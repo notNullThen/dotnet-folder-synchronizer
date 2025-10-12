@@ -8,6 +8,8 @@ namespace FoldersSynchronizer.Support
 
     public void PerformDirsDeletion()
     {
+      logger.LogInfo($"🗑️📁 DELETING DIRS STARTED...");
+
       foreach (var relativePath in _dirsToDeleteRelativePaths)
       {
         var targetPath = UseFullPath(relativePath, PathType.Target);
@@ -32,7 +34,7 @@ namespace FoldersSynchronizer.Support
     public void PerformDirsScan()
     {
       if (argumentsParameters.LogPreActionsValue)
-        logger.LogInfo($"🔍📁 SCANNING TARGET DIRECTORY FOR DIRS TO DELETE...");
+        logger.LogInfo($"🔍📁 SCANNING TARGET DIRECTORY FOR DIRS TO DELETE STARTED...");
 
       ScanDir(sourceDirDetails.Dirs, targetDirDetails.Dirs);
     }
