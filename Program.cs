@@ -2,48 +2,68 @@
 using FoldersSynchronizer.Core;
 using FoldersSynchronizer.Support;
 
-namespace FoldersSynchronizer;
-
-class Program
+namespace FoldersSynchronizer
 {
-    private static System.Timers.Timer aTimer;
-    private static FilesSynchronizer _filesSynchronizer;
-
-    static void Main(string[] args)
+    class Program
     {
-        // For debugging in VS Code uncomment the line below:
-        // args = ["--sourceDir", "../../../DataToTestOn/SourceFolder", "--targetDir", "../../../DataToTestOn/TargetFolder", "--logs", "../../../DataToTestOn/logs.txt", "--repeatTimePeriod", "3000", "--logPreActions"];
+        private static System.Timers.Timer aTimer;
+        private static Logger _logger;
+        private static FilesSynchronizer _filesSynchronizer;
+        private static bool _isRunning = false; // Prevent overlapping runs
 
-        var parameters = ArgumentsProcessor.GetParametersFromArguments(args);
-        _filesSynchronizer = new FilesSynchronizer(parameters);
-
-        if (parameters.RepeatTimePeriodValue == 0)
+        static void Main(string[] args)
         {
-            _filesSynchronizer.RunFileSync();
+            // For debugging in VS Code uncomment the line below:
+            args = ["--sourceDir", "../../../DataToTestOn/SourceFolder", "--targetDir", "../../../DataToTestOn/TargetFolder", "--logs", "../../../DataToTestOn/logs.txt", "--repeatTimePeriod", "3000", "--logPreActions"];
+
+            var parameters = ArgumentsProcessor.GetParametersFromArguments(args);
+            _logger = new(parameters.LogsFilePathValue);
+            _filesSynchronizer = new FilesSynchronizer(parameters);
+
+            if (parameters.RepeatTimePeriodValue == 0)
+            {
+                _filesSynchronizer.RunFileSync();
+            }
+            else
+            {
+                _filesSynchronizer.RunFileSync();
+                SetTimer(parameters.RepeatTimePeriodValue);
+
+                Console.ReadLine();
+
+                aTimer.Stop();
+                aTimer.Dispose();
+            }
         }
-        else
+
+        private static void SetTimer(int periodMilliseconds)
         {
-            _filesSynchronizer.RunFileSync();
-            SetTimer(parameters.RepeatTimePeriodValue);
+            aTimer = new System.Timers.Timer(periodMilliseconds)
+            {
+                AutoReset = true,
+                Enabled = true
+            };
 
-            Console.ReadLine();
-
-            aTimer.Stop();
-            aTimer.Dispose();
+            aTimer.Elapsed += StartFilesSync!;
         }
-    }
 
-    private static void SetTimer(int periodMilliseconds)
-    {
-        aTimer = new System.Timers.Timer(periodMilliseconds);
+        private static void StartFilesSync(object source, ElapsedEventArgs e)
+        {
+            if (_isRunning)
+            {
+                _logger.LogAlert("Previous Files Synchronization is not finished yet. Skipping this cycle...");
+                return;
+            }
 
-        aTimer.Elapsed += StartFilesSync!;
-        aTimer.AutoReset = true;
-        aTimer.Enabled = true;
-    }
-
-    private static void StartFilesSync(object source, ElapsedEventArgs e)
-    {
-        _filesSynchronizer.RunFileSync();
+            try
+            {
+                _isRunning = true;
+                _filesSynchronizer.RunFileSync();
+            }
+            finally
+            {
+                _isRunning = false;
+            }
+        }
     }
 }
