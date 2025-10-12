@@ -22,12 +22,14 @@ namespace FoldersSynchronizer.Core
 
     public void RunFileSync()
     {
+      var startTime = DateTime.Now;
       var parsedRepeatTimePeriod = Utils.ParseMillisecondsToTimeString(_argumentsParameters.RepeatTimePeriodValue);
+
       _logger.Log($@"
 ===============================================
 🔄🔄🔄 FILES SYNCHRONIZATION STARTED... 🔄🔄🔄
 ===============================================
-Started at: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + $" for each {parsedRepeatTimePeriod}");
+Started at: {startTime:yyyy-MM-dd HH:mm:ss} for each {parsedRepeatTimePeriod}");
 
       _dataReceiver.EraseData();
       _dataReceiver.ReceiveData();
@@ -40,12 +42,16 @@ Started at: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + $" for each {pars
       _fileProcessor.PerformFilesDeletion();
       _fileProcessor.PerformFilesCopying();
 
-      _logger.Log(@"
+      var endTime = DateTime.Now;
+      var tookTime = endTime - startTime;
+
+      _logger.Log($@"
 ===============================================
 🎉🎉🎉 FILES SYNCHRONIZATION COMPLETED! 🎉🎉🎉
 ===============================================
-Completed at: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + @$"
-Next run after: {parsedRepeatTimePeriod}");
+Completed at: {endTime:yyyy-MM-dd HH:mm:ss}
+Took time: {tookTime:hh\:mm\:ss}
+Next run in: {parsedRepeatTimePeriod}");
     }
   }
 }
