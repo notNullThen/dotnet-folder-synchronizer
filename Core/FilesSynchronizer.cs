@@ -18,7 +18,7 @@ namespace FoldersSynchronizer.Core
       _fileProcessor = new(argumentsParameters, _logger);
     }
 
-    public void SynchronizeFiles()
+    public void RunFileSync()
     {
       var startTime = DateTime.Now;
       _logger.Log($@"

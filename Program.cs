@@ -8,9 +8,6 @@ class Program
 {
     private static System.Timers.Timer aTimer;
     private static FilesSynchronizer _filesSynchronizer;
-    private const string pressAnyKeyMessage = "\nPress the Enter key to exit the application...\n";
-    private const string appStartedMessage = "The application started at {0:HH:mm:ss.fff}";
-    private const string syncStartedMessage = "The Files Synchronization started at {0:HH:mm:ss.fff}";
 
     static void Main(string[] args)
     {
@@ -20,29 +17,20 @@ class Program
         var parameters = ArgumentsProcessor.GetParametersFromArguments(args);
         _filesSynchronizer = new FilesSynchronizer(parameters);
 
-        Console.WriteLine(appStartedMessage, DateTime.Now);
-
         if (parameters.RepeatTimePeriodValue == 0)
         {
-            RunFileSync();
+            _filesSynchronizer.RunFileSync();
         }
         else
         {
-            RunFileSync(); // Run immediately on start
+            _filesSynchronizer.RunFileSync();
             SetTimer(parameters.RepeatTimePeriodValue);
 
-            Console.WriteLine(pressAnyKeyMessage);
             Console.ReadLine();
 
             aTimer.Stop();
             aTimer.Dispose();
         }
-    }
-
-    private static void RunFileSync()
-    {
-        Console.WriteLine(syncStartedMessage, DateTime.Now);
-        _filesSynchronizer.SynchronizeFiles();
     }
 
     private static void SetTimer(int periodMilliseconds)
@@ -56,7 +44,6 @@ class Program
 
     private static void StartFilesSync(object source, ElapsedEventArgs e)
     {
-        Console.WriteLine(syncStartedMessage, e.SignalTime);
-        _filesSynchronizer.SynchronizeFiles();
+        _filesSynchronizer.RunFileSync();
     }
 }
