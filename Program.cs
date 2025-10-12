@@ -8,7 +8,7 @@ class Program
     static void Main(string[] args)
     {
         // For debugging in VS Code uncomment the line bellow:
-        args = ["--sourceDir", "../../../DataToTestOn/SourceFolder", "--targetDir", "../../../DataToTestOn/TargetFolder", "--logs", "../../../DataToTestOn/logs.txt", "--logPreActions"];
+        // args = ["--sourceDir", "../../../DataToTestOn/SourceFolder", "--targetDir", "../../../DataToTestOn/TargetFolder", "--logs", "../../../DataToTestOn/logs.txt", "--logPreActions"];
 
         var argumentsParameters = ArgumentsProcessor.GetParametersFromArguments(args);
         var logger = new Logger(argumentsParameters.LogsFilePath);
