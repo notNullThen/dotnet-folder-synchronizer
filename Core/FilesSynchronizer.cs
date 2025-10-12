@@ -13,7 +13,7 @@ namespace FoldersSynchronizer.Core
 
     public FilesSynchronizer(ArgumentsParameters argumentsParameters)
     {
-      _logger = new(argumentsParameters.LogsFilePath);
+      _logger = new(argumentsParameters.LogsFilePathValue);
       _dataReceiver = new(argumentsParameters, _logger);
       _dirProcessor = new(argumentsParameters, _logger);
       _fileProcessor = new(argumentsParameters, _logger);

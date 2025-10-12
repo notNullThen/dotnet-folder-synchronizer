@@ -29,8 +29,9 @@ public class Logger
 
   public void LogAlert(string message)
   {
-    var header = "⚠️ ";
-    message = header + message;
+    var alertLabel = "⚠️⚠️⚠️";
+    var header = $"\n\n{alertLabel} ";
+    message = header + message + $" {alertLabel}\n\n";
 
     Log(message);
   }

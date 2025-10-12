@@ -10,7 +10,7 @@ public class ArgumentsParameters
   public static readonly string LogPreActions = Prefix + "logPreActions";
   public string SourceDirPath { get; set; }
   public string TargetDirPath { get; set; }
-  public string LogsFilePath { get; set; }
+  public string LogsFilePathValue { get; set; }
   public bool LogPreActionsValue { get; set; }
   public int RepeatTimePeriodValue { get; set; }
 }

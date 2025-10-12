@@ -16,18 +16,18 @@ namespace FoldersSynchronizer
             // For debugging in VS Code uncomment the line below:
             args = ["--sourceDir", "../../../DataToTestOn/SourceFolder", "--targetDir", "../../../DataToTestOn/TargetFolder", "--logs", "../../../DataToTestOn/logs.txt", "--repeatTimePeriod", "3000", "--logPreActions"];
 
-            var parameters = ArgumentsProcessor.GetParametersFromArguments(args);
-            _logger = new(parameters.LogsFilePathValue);
-            _filesSynchronizer = new FilesSynchronizer(parameters);
+            var argumentParameters = ArgumentsProcessor.GetParametersFromArguments(args);
+            _logger = new(argumentParameters.LogsFilePathValue);
+            _filesSynchronizer = new FilesSynchronizer(argumentParameters);
 
-            if (parameters.RepeatTimePeriodValue == 0)
+            if (argumentParameters.RepeatTimePeriodValue == 0)
             {
                 _filesSynchronizer.RunFileSync();
             }
             else
             {
                 _filesSynchronizer.RunFileSync();
-                SetTimer(parameters.RepeatTimePeriodValue);
+                SetTimer(argumentParameters.RepeatTimePeriodValue);
 
                 Console.ReadLine();
 

@@ -32,7 +32,7 @@ public static class ArgumentsProcessor
       }
       else if (arg.Key == ArgumentsParameters.LogsArgument)
       {
-        parameters.LogsFilePath = arg.Value;
+        parameters.LogsFilePathValue = arg.Value;
       }
       else if (arg.Key == ArgumentsParameters.LogPreActions)
       {
@@ -65,7 +65,7 @@ public static class ArgumentsProcessor
       throw new Exception($"You did not provide the '{ArgumentsParameters.TargetDirArgument}' argument");
     }
 
-    if (string.IsNullOrWhiteSpace(parameters.LogsFilePath))
+    if (string.IsNullOrWhiteSpace(parameters.LogsFilePathValue))
     {
       throw new Exception($"You did not provide the '{ArgumentsParameters.LogsArgument}' argument");
     }
