@@ -22,21 +22,23 @@ A C# console app that periodically synchronizes a target folder with a source fo
 
 ### ⚡ To run the app:
 
+1. Clone the repository into the needed folder
+1. Navigate to the `dotnet-folder-synchronizer` folder in the terminal
 1. Navigate to the folder
 
 ```bash
-cd bin/Release/net9.0/linux-x64/publish/FoldersSynchronizer
+cd bin/Release/net9.0/linux-x64/publish/
 ```
 
-2. Make the file executable (if it’s not already)
+4. Make the file executable (if it’s not already)
 
 ```bash
 chmod +x FoldersSynchronizer
 ```
 
-3. Prepare folders and paths
+5. Prepare folders and paths
 
-4. Run it after replacing arguments with needed values
+6. Run it after replacing arguments with needed values
 
 ```bash
 ./FoldersSynchronizer --sourceDir ./SourceFolder --targetDir ./TargetFolder --logs ./logs.txt --repeatTimePeriod 3000 --logPreActions
