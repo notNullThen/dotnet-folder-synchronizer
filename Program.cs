@@ -12,9 +12,9 @@ class Program
         var argumentsParameters = ArgumentsProcessor.GetParametersFromArguments(args);
         var logger = new Logger(argumentsParameters.LogsFilePath);
 
-        var dataReceiver = new DataReceiver(argumentsParameters);
-        var dirProcessor = new DirProcessor(argumentsParameters);
-        var fileProcessor = new FileProcessor(argumentsParameters);
+        var dataReceiver = new DataReceiver(argumentsParameters, logger);
+        var dirProcessor = new DirProcessor(argumentsParameters, logger);
+        var fileProcessor = new FileProcessor(argumentsParameters, logger);
 
         dataReceiver.ReceiveData();
 

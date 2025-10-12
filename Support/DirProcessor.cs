@@ -2,7 +2,7 @@ using FoldersSynchronizer.Support.Details;
 
 namespace FoldersSynchronizer.Support
 {
-  public class DirProcessor(ArgumentsParameters argumentsParameters) : FilesSynchronizerCore(argumentsParameters)
+  public class DirProcessor(ArgumentsParameters argumentsParameters, Logger logger) : FilesSynchronizerCore(argumentsParameters, logger)
   {
     private static readonly List<string> _dirsToDeleteRelativePaths = new();
 
@@ -34,6 +34,7 @@ namespace FoldersSynchronizer.Support
         }
 
         if (!matchFound) _dirsToDeleteRelativePaths.Add(targetSubDir.Path);
+        else logger.LogInfo($"The \"{targetSubDir.Path}\" folder will not be touched as it has equal path with a source.");
       }
     }
   }

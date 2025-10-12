@@ -2,7 +2,7 @@ using FoldersSynchronizer.Support.Details;
 
 namespace FoldersSynchronizer.Support
 {
-  public class FileProcessor(ArgumentsParameters argumentsParameters) : FilesSynchronizerCore(argumentsParameters)
+  public class FileProcessor(ArgumentsParameters argumentsParameters, Logger logger) : FilesSynchronizerCore(argumentsParameters, logger)
   {
     private static readonly List<string> _filesToDeleteRelativePaths = new();
     private static readonly List<string> _filesToCopyRelativePaths = new();

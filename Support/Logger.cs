@@ -2,18 +2,19 @@ namespace FoldersSynchronizer.Support;
 
 public class Logger
 {
-  private string _logsFilePath;
+  private readonly string _logsFilePath;
   private bool _consoleLog = true;
   public Logger(string logsFilePath, bool consoleLog = true)
   {
     File.Delete(logsFilePath);
     _logsFilePath = logsFilePath;
+    _consoleLog = consoleLog;
   }
 
   public void LogInfo(string message)
   {
     var header = "ℹ️ Info:\n";
-    message = header + message;
+    message = header + message + "\n\n";
 
     if (_consoleLog)
       Console.Write(message);

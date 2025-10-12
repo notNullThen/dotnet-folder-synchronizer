@@ -2,9 +2,10 @@ using FoldersSynchronizer.Support.Details;
 
 namespace FoldersSynchronizer.Support;
 
-public abstract class FilesSynchronizerCore(ArgumentsParameters argumentsParameters)
+public abstract class FilesSynchronizerCore(ArgumentsParameters argumentsParameters, Logger logger)
 {
-  protected ArgumentsParameters argumentsParameters = argumentsParameters;
+  protected readonly ArgumentsParameters argumentsParameters = argumentsParameters;
+  protected readonly Logger logger = logger;
 
   protected static DirDetails sourceDirDetails;
   protected static DirDetails targetDirDetails;
