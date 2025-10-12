@@ -9,7 +9,19 @@ namespace FoldersSynchronizer.Support
     public void PerformDirsDeletion()
     {
       foreach (var relativePath in _dirsToDeleteRelativePaths)
-        Directory.Delete(UseFullPath(relativePath, PathType.Target), recursive: true);
+      {
+        var targetPath = UseFullPath(relativePath, PathType.Target);
+        try
+        {
+          Directory.Delete(targetPath, recursive: true);
+          logger.LogSuccess($"The \"{targetPath}\" dir and files it contains are deleted.");
+        }
+        catch (Exception exception)
+        {
+          logger.LogError($"Failed to delete \"{targetPath}\" dir. Details are below:\n({exception.GetType().Name}): {exception.Message}");
+          throw;
+        }
+      }
     }
 
     public void PerformDirsScan()
