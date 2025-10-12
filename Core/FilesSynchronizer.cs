@@ -25,8 +25,7 @@ namespace FoldersSynchronizer.Core
       var startTime = DateTime.Now;
       var parsedRepeatTimePeriod = Utils.ParseMillisecondsToTimeString(_argumentsParameters.RepeatTimePeriodValue);
 
-      _logger.Log($@"
-===============================================
+      _logger.Log($@"===============================================
 🔄🔄🔄 FILES SYNCHRONIZATION STARTED... 🔄🔄🔄
 ===============================================
 Started at: {startTime:yyyy-MM-dd HH:mm:ss} for each {parsedRepeatTimePeriod}
