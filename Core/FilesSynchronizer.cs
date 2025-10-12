@@ -29,7 +29,9 @@ namespace FoldersSynchronizer.Core
 ===============================================
 🔄🔄🔄 FILES SYNCHRONIZATION STARTED... 🔄🔄🔄
 ===============================================
-Started at: {startTime:yyyy-MM-dd HH:mm:ss} for each {parsedRepeatTimePeriod}");
+Started at: {startTime:yyyy-MM-dd HH:mm:ss} for each {parsedRepeatTimePeriod}
+===============================================
+To stop synchronization press Ctrl + C");
 
       _dataReceiver.EraseData();
       _dataReceiver.ReceiveData();
@@ -51,7 +53,9 @@ Started at: {startTime:yyyy-MM-dd HH:mm:ss} for each {parsedRepeatTimePeriod}");
 ===============================================
 Completed at: {endTime:yyyy-MM-dd HH:mm:ss}
 Took time: {tookTime:hh\:mm\:ss}
-Next run in: {parsedRepeatTimePeriod}");
+Next run in: {parsedRepeatTimePeriod}
+===============================================
+To stop synchronization press Ctrl + C");
     }
   }
 }
