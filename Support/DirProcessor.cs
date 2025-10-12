@@ -15,11 +15,11 @@ namespace FoldersSynchronizer.Support
         {
           if (!Directory.Exists(targetPath))
           {
-            logger.LogAlert($"The \"{targetPath}\" dir already does not exist, so no need to delete it.");
+            logger.LogAlert($"⏩📁 The \"{targetPath}\" dir already does not exist, so no need to delete it.");
             continue;
           }
           Directory.Delete(targetPath, recursive: true);
-          logger.LogSuccess($"The \"{targetPath}\" dir and files it contains are deleted.");
+          logger.LogSuccess($"🗑️📁 The \"{targetPath}\" dir and files it contains are deleted.");
         }
         catch (Exception exception)
         {
@@ -31,6 +31,9 @@ namespace FoldersSynchronizer.Support
 
     public void PerformDirsScan()
     {
+      if (argumentsParameters.LogPreActionsValue)
+        logger.LogInfo($"🔍📁 SCANNING TARGET DIRECTORY FOR DIRS TO DELETE...");
+
       ScanDir(sourceDirDetails.Dirs, targetDirDetails.Dirs);
     }
 
@@ -54,12 +57,12 @@ namespace FoldersSynchronizer.Support
         {
           _dirsToDeleteRelativePaths.Add(targetSubDir.Path);
           if (argumentsParameters.LogPreActionsValue)
-            logger.LogInfo($"The \"{targetSubDir.Path}\" folder will be deleted.");
+            logger.LogInfo($"🗑️📁 The \"{targetSubDir.Path}\" folder will be deleted.");
         }
         else
         {
           if (argumentsParameters.LogPreActionsValue)
-            logger.LogInfo($"The \"{targetSubDir.Path}\" folder will not be touched as it has equal path with a source one.");
+            logger.LogInfo($"⏩📁 The \"{targetSubDir.Path}\" folder will not be touched as it has equal path with a source one.");
         }
       }
     }

@@ -10,19 +10,49 @@ namespace FoldersSynchronizer.Support
     public void PerformFilesCopying()
     {
       foreach (var relativePath in _filesToCopyRelativePaths)
-        File.Copy(UseFullPath(relativePath, PathType.Source), UseFullPath(relativePath, PathType.Target));
+      {
+        var sourceCopyPath = UseFullPath(relativePath, PathType.Source);
+        var targetCopyPath = UseFullPath(relativePath, PathType.Target);
+
+        try
+        {
+          File.Copy(sourceCopyPath, targetCopyPath);
+          logger.LogSuccess($"💾📄 The \"{sourceCopyPath}\" file is copied to target directory.");
+        }
+        catch (Exception exception)
+        {
+          logger.LogError($"Failed to copy \"{sourceCopyPath}\" file to target directory. Details are below:\n({exception.GetType().Name}): {exception.Message}");
+          throw;
+        }
+      }
     }
 
     public void PerformFilesDeletion()
     {
       foreach (var relativePath in _filesToDeleteRelativePaths)
-        File.Delete(UseFullPath(relativePath, PathType.Target));
+      {
+        var targetDeletePath = UseFullPath(relativePath, PathType.Target);
+
+        try
+        {
+          File.Delete(targetDeletePath);
+          logger.LogSuccess($"🗑️📄 The \"{targetDeletePath}\" file is deleted.");
+        }
+        catch (Exception exception)
+        {
+          logger.LogError($"Failed to delete \"{targetDeletePath}\" file. Details are below:\n({exception.GetType().Name}): {exception.Message}");
+          throw;
+        }
+      }
     }
 
     public void PerformFilesScan()
     {
-      DetectFilesToDelete(sourceDirDetails, targetDirDetails);
+      if (argumentsParameters.LogPreActionsValue)
+        logger.LogInfo($"🔍📄 SCANNING TARGET DIRECTORY FOR FILES TO COPY/DELETE...");
+
       DetectFilesToCopy(sourceDirDetails, targetDirDetails);
+      DetectFilesToDelete(sourceDirDetails, targetDirDetails);
     }
 
     private void DetectFilesToDelete(DirDetails sourceDir, DirDetails targetDir)
@@ -54,12 +84,17 @@ namespace FoldersSynchronizer.Support
         {
           _filesToDeleteRelativePaths.Add(GetRelativePath(targetFile.Path));
           if (argumentsParameters.LogPreActionsValue)
-            logger.LogInfo($"The \"{targetFile.Path}\" file will be deleted.");
+          {
+            if (_filesToCopyRelativePaths.Contains(GetRelativePath(targetFile.Path)))
+              logger.LogInfo($"🔁📄 The \"{targetFile.Path}\" file will be replaced by source.");
+            else
+              logger.LogInfo($"🗑️📄 The \"{targetFile.Path}\" file will be deleted.");
+          }
         }
         else
         {
           if (argumentsParameters.LogPreActionsValue)
-            logger.LogInfo($"The \"{targetFile.Path}\" file will not be touched as it is equal with a source one.");
+            logger.LogInfo($"⏩📄 The \"{targetFile.Path}\" file will not be touched as it is equal with a source one.");
         }
       }
     }
@@ -93,7 +128,7 @@ namespace FoldersSynchronizer.Support
         {
           _filesToCopyRelativePaths.Add(GetRelativePath(sourceFile.Path));
           if (argumentsParameters.LogPreActionsValue)
-            logger.LogInfo($"The \"{sourceFile.Path}\" file will be copied.");
+            logger.LogInfo($"💾📄 The \"{sourceFile.Path}\" file will be copied.");
         }
         // Ignored files already logged in the deletion method
       }
